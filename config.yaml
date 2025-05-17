@@ -1,0 +1,20 @@
+server:
+  port: 5010
+
+logger:
+  dir: log                                  # DO NOT EDIT!
+  file_name: wacoregateway
+  max_backups: 0                            # set 0 for unlimited backups
+  max_size: 10                              # in mb
+  max_age: 90                               # in days, set 0 for unlimited days
+  compress: true
+  local_time: true
+
+postgres:
+  host: localhost
+  port: 5432
+  username: postgres
+  password: 12345
+  database: whatsappdb
+  options:
+    - sslmode=disable
