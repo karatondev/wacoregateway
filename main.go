@@ -56,11 +56,6 @@ func main() {
 	dbLog := waLog.Stdout("Database", "DEBUG", true)
 	container := sqlstore.NewWithDB(sqlDB, "postgres", dbLog)
 
-	// deviceStore, err := container.GetFirstDevice(ctx)
-	// if err != nil {
-	// 	logger.Errorf("Failed to get device store: %v", err)
-	// }
-
 	clientLog := waLog.Stdout("Client", "DEBUG", true)
 
 	devices, err := container.GetAllDevices(ctx)
@@ -147,18 +142,55 @@ func main() {
 			return
 		}
 
-		// jid := types.NewJID(req.To, types.DefaultUserServer)
-		// msg := &waProto.Message{
-		// 	Conversation: protoString(req.MessageText),
-		// }
-
-		// _, err := client.SendMessage(context.Background(), jid, "", msg)
-		// if err != nil {
-		// 	c.JSON(500, gin.H{"error": err.Error()})
-		// 	return
-		// }
-
 		c.JSON(200, gin.H{"status": "message sent " + resp.ID})
+	})
+
+	r.GET("/contacts/:sender_jid", func(c *gin.Context) {
+		senderJID := c.Param("sender_jid")
+		client, exists := clients[senderJID]
+		if !exists {
+			c.JSON(404, gin.H{"error": "client not found"})
+			return
+		}
+
+		contacts, err := client.Store.Contacts.GetAllContacts(ctx)
+		if err != nil {
+			c.JSON(500, gin.H{"error": err.Error()})
+			return
+		}
+		result := []map[string]string{}
+		for jid, contact := range contacts {
+			result = append(result, map[string]string{
+				"jid":   jid.String(),
+				"name":  contact.FirstName,
+				"short": contact.FullName,
+			})
+		}
+		c.JSON(200, result)
+	})
+
+	r.GET("/groups/:sender_jid", func(c *gin.Context) {
+		senderJID := c.Param("sender_jid")
+		client, exists := clients[senderJID]
+		if !exists {
+			c.JSON(404, gin.H{"error": "client not found"})
+			return
+		}
+
+		groups, err := client.GetJoinedGroups()
+		if err != nil {
+			c.JSON(500, gin.H{"error": err.Error()})
+			return
+		}
+
+		result := []map[string]string{}
+		for _, group := range groups {
+			result = append(result, map[string]string{
+				"jid":  group.JID.String(),
+				"name": group.Name,
+			})
+		}
+		c.JSON(200, result)
 	})
 
 	r.Run(":8080")
