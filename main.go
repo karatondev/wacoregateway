@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net"
@@ -10,7 +11,9 @@ import (
 
 	"github.com/docker/docker/api/types/events"
 	api "github.com/faisolarifin/wacoregateway/http/grpc"
+	"github.com/faisolarifin/wacoregateway/model/constant"
 	"github.com/faisolarifin/wacoregateway/provider"
+	"github.com/faisolarifin/wacoregateway/service"
 	"github.com/faisolarifin/wacoregateway/util"
 	"github.com/go-playground/validator/v10"
 	"go.mau.fi/whatsmeow"
@@ -38,54 +41,35 @@ func eventHandler(evt interface{}) {
 func main() {
 	logger := provider.NewLogger()
 	validate := validator.New()
+	container, err := provider.SqlStoreContainer()
+	if err != nil {
+		logger.Errorf(provider.AppLog, "Failed to connect to database:", err)
+	}
 	logger.Infof(provider.AppLog, "Application started")
 
-	// ctx := context.WithValue(context.Background(), constant.CtxReqIDKey, "MAIN")
-
+	ctx := context.WithValue(context.Background(), constant.CtxReqIDKey, "MAIN")
 	go func(logger provider.ILogger) {
-		app := api.NewApp(validate, logger)
+		service := service.NewService(container, logger)
+		if err := service.LoadNewClient(ctx, container); err != nil {
+			logger.Errorf(provider.AppLog, "Failed to load new client: %v", err)
+		}
 
-		addr := fmt.Sprintf(":%v", util.Configuration.Server.Port)
+		app := api.NewApp(validate, logger)
 		server, err := app.GRPCServer()
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		lis, err := net.Listen("tcp", ":"+addr)
+		addr := fmt.Sprintf(":%v", util.Configuration.Server.Port)
+		lis, err := net.Listen("tcp", addr)
 		if err != nil {
 			log.Fatalf("failed to listen: %v", err)
 		}
-		logger.Infof(provider.AppLog, "gRPC server listening on :%v", addr)
+		logger.Infof(provider.AppLog, "gRPC server listening on %v", addr)
 		if err := server.Serve(lis); err != nil {
 			logger.Errorf(provider.AppLog, "failed to serve: %v", err)
 		}
 	}(logger)
-
-	// sqlDB, err := provider.NewPostgresConnection()
-	// if err != nil {
-	// 	logger.Errorf(provider.AppLog, "Failed to connect to database:", err)
-	// }
-	// defer sqlDB.Close()
-
-	// dbLog := waLog.Stdout("Database", "DEBUG", true)
-	// container := sqlstore.NewWithDB(sqlDB, "postgres", dbLog)
-
-	// clientLog := waLog.Stdout("Client", "DEBUG", true)
-
-	// devices, err := container.GetAllDevices(ctx)
-	// if err != nil {
-	// 	logger.Errorf(provider.AppLog, "Failed to get device store: %v", err)
-	// }
-
-	// for _, dev := range devices {
-	// 	client := whatsmeow.NewClient(dev, clientLog)
-	// 	err := client.Connect()
-	// 	if err != nil {
-	// 		fmt.Printf("failed to connect device %s: %v\n", dev.ID.String(), err)
-	// 		continue
-	// 	}
-	// 	clients[dev.ID.String()] = client
-	// }
 
 	// r := gin.Default()
 
@@ -214,6 +198,12 @@ func main() {
 
 	sig := <-shutdownCh
 	logger.Infof(provider.AppLog, "Receiving signal: %s", sig)
+
+	func(logger provider.ILogger) {
+		defer container.Close()
+
+		logger.Infof(provider.AppLog, "Successfully stop Application.")
+	}(logger)
 }
 
 func protoString(s string) *string {
