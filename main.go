@@ -1,24 +1,19 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"log"
+	"net"
 	"os"
 	"os/signal"
 	"syscall"
 
 	"github.com/docker/docker/api/types/events"
-	"github.com/faisolarifin/wacoregateway/model/constant"
+	api "github.com/faisolarifin/wacoregateway/http/grpc"
 	"github.com/faisolarifin/wacoregateway/provider"
 	"github.com/faisolarifin/wacoregateway/util"
-	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	"go.mau.fi/whatsmeow"
-	"go.mau.fi/whatsmeow/proto/waE2E"
-	"go.mau.fi/whatsmeow/store/sqlstore"
-	"go.mau.fi/whatsmeow/types"
-	waLog "go.mau.fi/whatsmeow/util/log"
-	"google.golang.org/protobuf/proto"
 )
 
 var clients = make(map[string]*whatsmeow.Client)
@@ -42,158 +37,177 @@ func eventHandler(evt interface{}) {
 
 func main() {
 	logger := provider.NewLogger()
+	validate := validator.New()
 	logger.Infof(provider.AppLog, "Application started")
 
-	ctx := context.WithValue(context.Background(), constant.CtxReqIDKey, "MAIN")
+	// ctx := context.WithValue(context.Background(), constant.CtxReqIDKey, "MAIN")
 
-	// Create database connection
-	sqlDB, err := provider.NewPostgresConnection()
-	if err != nil {
-		logger.Errorf(provider.AppLog, "Failed to connect to database:", err)
-	}
-	defer sqlDB.Close()
+	go func(logger provider.ILogger) {
+		app := api.NewApp(validate, logger)
 
-	dbLog := waLog.Stdout("Database", "DEBUG", true)
-	container := sqlstore.NewWithDB(sqlDB, "postgres", dbLog)
-
-	clientLog := waLog.Stdout("Client", "DEBUG", true)
-
-	devices, err := container.GetAllDevices(ctx)
-	if err != nil {
-		logger.Errorf(provider.AppLog, "Failed to get device store: %v", err)
-	}
-
-	for _, dev := range devices {
-		client := whatsmeow.NewClient(dev, clientLog)
-		err := client.Connect()
+		addr := fmt.Sprintf(":%v", util.Configuration.Server.Port)
+		server, err := app.GRPCServer()
 		if err != nil {
-			fmt.Printf("failed to connect device %s: %v\n", dev.ID.String(), err)
-			continue
-		}
-		clients[dev.ID.String()] = client
-	}
-
-	r := gin.Default()
-
-	r.GET("/devices", func(c *gin.Context) {
-		devices := []string{}
-		for id := range clients {
-			devices = append(devices, id)
-		}
-		c.JSON(200, gin.H{"devices": devices})
-	})
-
-	r.POST("/devices/new/:number", func(c *gin.Context) {
-		num := c.Param("number")
-		jid := types.NewJID(num, types.DefaultUserServer)
-		device := container.NewDevice()
-
-		client := whatsmeow.NewClient(device, clientLog)
-		clients[jid.String()] = client
-
-		if client.Store.ID == nil {
-			qrChan, _ := client.GetQRChannel(context.Background())
-			go func() {
-				_ = client.Connect()
-			}()
-
-			for evt := range qrChan {
-				if evt.Event == "code" {
-					c.JSON(200, gin.H{"qr": evt.Code})
-					return
-				}
-			}
-		} else {
-			c.JSON(200, gin.H{"message": "Device already logged in."})
-		}
-	})
-
-	r.POST("/send", func(c *gin.Context) {
-		type SendMessageRequest struct {
-			SenderJID   string `json:"sender_jid"`
-			To          string `json:"to"`
-			MessageText string `json:"message"`
+			log.Fatal(err)
 		}
 
-		var req SendMessageRequest
-		if err := c.ShouldBindJSON(&req); err != nil {
-			c.JSON(400, gin.H{"error": "invalid request"})
-			return
-		}
-
-		client, exists := clients[req.SenderJID]
-		if !exists {
-			c.JSON(404, gin.H{"error": "sender device not found"})
-			return
-		}
-
-		jid, err := types.ParseJID(req.To)
+		lis, err := net.Listen("tcp", ":"+addr)
 		if err != nil {
-			c.JSON(400, gin.H{"error": "invalid recipient JID"})
-			return
+			log.Fatalf("failed to listen: %v", err)
 		}
-
-		resp, err := client.SendMessage(context.Background(), jid, &waE2E.Message{
-			Conversation: proto.String(req.MessageText),
-		})
-
-		if err != nil {
-			c.JSON(500, gin.H{"error": err.Error()})
-			return
+		logger.Infof(provider.AppLog, "gRPC server listening on :%v", addr)
+		if err := server.Serve(lis); err != nil {
+			logger.Errorf(provider.AppLog, "failed to serve: %v", err)
 		}
+	}(logger)
 
-		c.JSON(200, gin.H{"status": "message sent " + resp.ID})
-	})
+	// sqlDB, err := provider.NewPostgresConnection()
+	// if err != nil {
+	// 	logger.Errorf(provider.AppLog, "Failed to connect to database:", err)
+	// }
+	// defer sqlDB.Close()
 
-	r.GET("/contacts/:sender_jid", func(c *gin.Context) {
-		senderJID := c.Param("sender_jid")
-		client, exists := clients[senderJID]
-		if !exists {
-			c.JSON(404, gin.H{"error": "client not found"})
-			return
-		}
+	// dbLog := waLog.Stdout("Database", "DEBUG", true)
+	// container := sqlstore.NewWithDB(sqlDB, "postgres", dbLog)
 
-		contacts, err := client.Store.Contacts.GetAllContacts(ctx)
-		if err != nil {
-			c.JSON(500, gin.H{"error": err.Error()})
-			return
-		}
-		result := []map[string]string{}
-		for jid, contact := range contacts {
-			result = append(result, map[string]string{
-				"jid":   jid.String(),
-				"name":  contact.FirstName,
-				"short": contact.FullName,
-			})
-		}
-		c.JSON(200, result)
-	})
+	// clientLog := waLog.Stdout("Client", "DEBUG", true)
 
-	r.GET("/groups/:sender_jid", func(c *gin.Context) {
-		senderJID := c.Param("sender_jid")
-		client, exists := clients[senderJID]
-		if !exists {
-			c.JSON(404, gin.H{"error": "client not found"})
-			return
-		}
+	// devices, err := container.GetAllDevices(ctx)
+	// if err != nil {
+	// 	logger.Errorf(provider.AppLog, "Failed to get device store: %v", err)
+	// }
 
-		groups, err := client.GetJoinedGroups()
-		if err != nil {
-			c.JSON(500, gin.H{"error": err.Error()})
-			return
-		}
+	// for _, dev := range devices {
+	// 	client := whatsmeow.NewClient(dev, clientLog)
+	// 	err := client.Connect()
+	// 	if err != nil {
+	// 		fmt.Printf("failed to connect device %s: %v\n", dev.ID.String(), err)
+	// 		continue
+	// 	}
+	// 	clients[dev.ID.String()] = client
+	// }
 
-		result := []map[string]string{}
-		for _, group := range groups {
-			result = append(result, map[string]string{
-				"jid":  group.JID.String(),
-				"name": group.Name,
-			})
-		}
-		c.JSON(200, result)
-	})
+	// r := gin.Default()
 
-	r.Run(":8080")
+	// r.GET("/devices", func(c *gin.Context) {
+	// 	devices := []string{}
+	// 	for id := range clients {
+	// 		devices = append(devices, id)
+	// 	}
+	// 	c.JSON(200, gin.H{"devices": devices})
+	// })
+
+	// r.POST("/devices/new/:number", func(c *gin.Context) {
+	// 	num := c.Param("number")
+	// 	jid := types.NewJID(num, types.DefaultUserServer)
+	// 	device := container.NewDevice()
+
+	// 	client := whatsmeow.NewClient(device, clientLog)
+	// 	clients[jid.String()] = client
+
+	// 	if client.Store.ID == nil {
+	// 		qrChan, _ := client.GetQRChannel(context.Background())
+	// 		go func() {
+	// 			_ = client.Connect()
+	// 		}()
+
+	// 		for evt := range qrChan {
+	// 			if evt.Event == "code" {
+	// 				c.JSON(200, gin.H{"qr": evt.Code})
+	// 				return
+	// 			}
+	// 		}
+	// 	} else {
+	// 		c.JSON(200, gin.H{"message": "Device already logged in."})
+	// 	}
+	// })
+
+	// r.POST("/send", func(c *gin.Context) {
+	// 	type SendMessageRequest struct {
+	// 		SenderJID   string `json:"sender_jid"`
+	// 		To          string `json:"to"`
+	// 		MessageText string `json:"message"`
+	// 	}
+
+	// 	var req SendMessageRequest
+	// 	if err := c.ShouldBindJSON(&req); err != nil {
+	// 		c.JSON(400, gin.H{"error": "invalid request"})
+	// 		return
+	// 	}
+
+	// 	client, exists := clients[req.SenderJID]
+	// 	if !exists {
+	// 		c.JSON(404, gin.H{"error": "sender device not found"})
+	// 		return
+	// 	}
+
+	// 	jid, err := types.ParseJID(req.To)
+	// 	if err != nil {
+	// 		c.JSON(400, gin.H{"error": "invalid recipient JID"})
+	// 		return
+	// 	}
+
+	// 	resp, err := client.SendMessage(context.Background(), jid, &waE2E.Message{
+	// 		Conversation: proto.String(req.MessageText),
+	// 	})
+
+	// 	if err != nil {
+	// 		c.JSON(500, gin.H{"error": err.Error()})
+	// 		return
+	// 	}
+
+	// 	c.JSON(200, gin.H{"status": "message sent " + resp.ID})
+	// })
+
+	// r.GET("/contacts/:sender_jid", func(c *gin.Context) {
+	// 	senderJID := c.Param("sender_jid")
+	// 	client, exists := clients[senderJID]
+	// 	if !exists {
+	// 		c.JSON(404, gin.H{"error": "client not found"})
+	// 		return
+	// 	}
+
+	// 	contacts, err := client.Store.Contacts.GetAllContacts(ctx)
+	// 	if err != nil {
+	// 		c.JSON(500, gin.H{"error": err.Error()})
+	// 		return
+	// 	}
+	// 	result := []map[string]string{}
+	// 	for jid, contact := range contacts {
+	// 		result = append(result, map[string]string{
+	// 			"jid":   jid.String(),
+	// 			"name":  contact.FirstName,
+	// 			"short": contact.FullName,
+	// 		})
+	// 	}
+	// 	c.JSON(200, result)
+	// })
+
+	// r.GET("/groups/:sender_jid", func(c *gin.Context) {
+	// 	senderJID := c.Param("sender_jid")
+	// 	client, exists := clients[senderJID]
+	// 	if !exists {
+	// 		c.JSON(404, gin.H{"error": "client not found"})
+	// 		return
+	// 	}
+
+	// 	groups, err := client.GetJoinedGroups()
+	// 	if err != nil {
+	// 		c.JSON(500, gin.H{"error": err.Error()})
+	// 		return
+	// 	}
+
+	// 	result := []map[string]string{}
+	// 	for _, group := range groups {
+	// 		result = append(result, map[string]string{
+	// 			"jid":  group.JID.String(),
+	// 			"name": group.Name,
+	// 		})
+	// 	}
+	// 	c.JSON(200, result)
+	// })
+
+	// r.Run(":8080")
 
 	shutdownCh := make(chan os.Signal, 1)
 	signal.Notify(shutdownCh, os.Interrupt, syscall.SIGTERM)

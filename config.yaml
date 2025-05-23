@@ -1,5 +1,5 @@
 server:
-  port: 5010
+  port: 50051
 
 logger:
   dir: log                                  # DO NOT EDIT!
