@@ -5,14 +5,19 @@ option go_package = "model/pb";
 package wacoreproto;
 
 service WaCoreGateway {
-  rpc GetClientContact (ContactRequest) returns (ContactResponse) {}
+  rpc GetClientContact (ContactRequest) returns (ContactListResponse) {}
 }
 
 message ContactRequest {
-  string text = 1;
+  string sender_jid = 1;
 }
 
-message ContactResponse {
-  string code = 3;
-  string message = 4;
+message ContactItem {
+  string jid = 1;
+  string name = 2;
+  string short = 3;
+}
+
+message ContactListResponse {
+  repeated ContactItem contacts = 1;
 }

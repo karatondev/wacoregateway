@@ -54,7 +54,7 @@ func main() {
 			logger.Errorf(provider.AppLog, "Failed to load new client: %v", err)
 		}
 
-		app := api.NewApp(validate, logger)
+		app := api.NewApp(validate, logger, service)
 		server, err := app.GRPCServer()
 		if err != nil {
 			log.Fatal(err)

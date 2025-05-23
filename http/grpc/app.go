@@ -1,12 +1,9 @@
 package api
 
 import (
-	"context"
-	"fmt"
-
-	"github.com/faisolarifin/wacoregateway/cache"
 	proto "github.com/faisolarifin/wacoregateway/model/pb"
 	"github.com/faisolarifin/wacoregateway/provider"
+	"github.com/faisolarifin/wacoregateway/service"
 	"github.com/go-playground/validator/v10"
 	"google.golang.org/grpc"
 )
@@ -14,35 +11,23 @@ import (
 type App struct {
 	validate *validator.Validate
 	log      provider.ILogger
+	service  service.ServiceInterface
 }
 
 type server struct {
 	proto.UnimplementedWaCoreGatewayServer
+	service service.ServiceInterface
 }
 
-func NewApp(validate *validator.Validate, log provider.ILogger) *App {
-	return &App{validate: validate, log: log}
+func NewApp(validate *validator.Validate, log provider.ILogger, service service.ServiceInterface) *App {
+	return &App{validate: validate, log: log, service: service}
 }
 
 func (a *App) GRPCServer() (*grpc.Server, error) {
 	grpcServer := grpc.NewServer()
-	proto.RegisterWaCoreGatewayServer(grpcServer, &server{})
+	proto.RegisterWaCoreGatewayServer(grpcServer, &server{
+		service: a.service,
+	})
 
 	return grpcServer, nil
-}
-
-func (s *server) GetClientContact(ctx context.Context, req *proto.ContactRequest) (*proto.ContactResponse, error) {
-
-	clients := cache.GetAllClients()
-	devices := []string{}
-	for id := range clients {
-		devices = append(devices, id)
-	}
-
-	fmt.Println(devices)
-
-	return &proto.ContactResponse{
-		Code:    "200",
-		Message: "success",
-	}, nil
 }

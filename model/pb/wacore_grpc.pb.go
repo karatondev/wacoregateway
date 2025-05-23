@@ -19,14 +19,14 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	WaCoreGateway_GetClientContact_FullMethodName = "/helloworld.WaCoreGateway/GetClientContact"
+	WaCoreGateway_GetClientContact_FullMethodName = "/wacoreproto.WaCoreGateway/GetClientContact"
 )
 
 // WaCoreGatewayClient is the client API for WaCoreGateway service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type WaCoreGatewayClient interface {
-	GetClientContact(ctx context.Context, in *ContactRequest, opts ...grpc.CallOption) (*ContactResponse, error)
+	GetClientContact(ctx context.Context, in *ContactRequest, opts ...grpc.CallOption) (*ContactListResponse, error)
 }
 
 type waCoreGatewayClient struct {
@@ -37,8 +37,8 @@ func NewWaCoreGatewayClient(cc grpc.ClientConnInterface) WaCoreGatewayClient {
 	return &waCoreGatewayClient{cc}
 }
 
-func (c *waCoreGatewayClient) GetClientContact(ctx context.Context, in *ContactRequest, opts ...grpc.CallOption) (*ContactResponse, error) {
-	out := new(ContactResponse)
+func (c *waCoreGatewayClient) GetClientContact(ctx context.Context, in *ContactRequest, opts ...grpc.CallOption) (*ContactListResponse, error) {
+	out := new(ContactListResponse)
 	err := c.cc.Invoke(ctx, WaCoreGateway_GetClientContact_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -50,7 +50,7 @@ func (c *waCoreGatewayClient) GetClientContact(ctx context.Context, in *ContactR
 // All implementations must embed UnimplementedWaCoreGatewayServer
 // for forward compatibility
 type WaCoreGatewayServer interface {
-	GetClientContact(context.Context, *ContactRequest) (*ContactResponse, error)
+	GetClientContact(context.Context, *ContactRequest) (*ContactListResponse, error)
 	mustEmbedUnimplementedWaCoreGatewayServer()
 }
 
@@ -58,7 +58,7 @@ type WaCoreGatewayServer interface {
 type UnimplementedWaCoreGatewayServer struct {
 }
 
-func (UnimplementedWaCoreGatewayServer) GetClientContact(context.Context, *ContactRequest) (*ContactResponse, error) {
+func (UnimplementedWaCoreGatewayServer) GetClientContact(context.Context, *ContactRequest) (*ContactListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetClientContact not implemented")
 }
 func (UnimplementedWaCoreGatewayServer) mustEmbedUnimplementedWaCoreGatewayServer() {}
@@ -96,7 +96,7 @@ func _WaCoreGateway_GetClientContact_Handler(srv interface{}, ctx context.Contex
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var WaCoreGateway_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "helloworld.WaCoreGateway",
+	ServiceName: "wacoreproto.WaCoreGateway",
 	HandlerType: (*WaCoreGatewayServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
