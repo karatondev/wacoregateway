@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -19,14 +20,22 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	WaCoreGateway_GetClientContact_FullMethodName = "/wacoreproto.WaCoreGateway/GetClientContact"
+	WaCoreGateway_GetClientContact_FullMethodName    = "/wacoreproto.WaCoreGateway/GetClientContact"
+	WaCoreGateway_GetClientGroup_FullMethodName      = "/wacoreproto.WaCoreGateway/GetClientGroup"
+	WaCoreGateway_GetAllDevice_FullMethodName        = "/wacoreproto.WaCoreGateway/GetAllDevice"
+	WaCoreGateway_SendMessage_FullMethodName         = "/wacoreproto.WaCoreGateway/SendMessage"
+	WaCoreGateway_StreamConnectDevice_FullMethodName = "/wacoreproto.WaCoreGateway/StreamConnectDevice"
 )
 
 // WaCoreGatewayClient is the client API for WaCoreGateway service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type WaCoreGatewayClient interface {
-	GetClientContact(ctx context.Context, in *ContactRequest, opts ...grpc.CallOption) (*ContactListResponse, error)
+	GetClientContact(ctx context.Context, in *ClientdataRequest, opts ...grpc.CallOption) (*ContactListResponse, error)
+	GetClientGroup(ctx context.Context, in *ClientdataRequest, opts ...grpc.CallOption) (*GroupListResponse, error)
+	GetAllDevice(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*DeviceListResponse, error)
+	SendMessage(ctx context.Context, in *MessageRequest, opts ...grpc.CallOption) (*MessageResponse, error)
+	StreamConnectDevice(ctx context.Context, in *ConnectDeviceRequest, opts ...grpc.CallOption) (WaCoreGateway_StreamConnectDeviceClient, error)
 }
 
 type waCoreGatewayClient struct {
@@ -37,7 +46,7 @@ func NewWaCoreGatewayClient(cc grpc.ClientConnInterface) WaCoreGatewayClient {
 	return &waCoreGatewayClient{cc}
 }
 
-func (c *waCoreGatewayClient) GetClientContact(ctx context.Context, in *ContactRequest, opts ...grpc.CallOption) (*ContactListResponse, error) {
+func (c *waCoreGatewayClient) GetClientContact(ctx context.Context, in *ClientdataRequest, opts ...grpc.CallOption) (*ContactListResponse, error) {
 	out := new(ContactListResponse)
 	err := c.cc.Invoke(ctx, WaCoreGateway_GetClientContact_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -46,11 +55,74 @@ func (c *waCoreGatewayClient) GetClientContact(ctx context.Context, in *ContactR
 	return out, nil
 }
 
+func (c *waCoreGatewayClient) GetClientGroup(ctx context.Context, in *ClientdataRequest, opts ...grpc.CallOption) (*GroupListResponse, error) {
+	out := new(GroupListResponse)
+	err := c.cc.Invoke(ctx, WaCoreGateway_GetClientGroup_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *waCoreGatewayClient) GetAllDevice(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*DeviceListResponse, error) {
+	out := new(DeviceListResponse)
+	err := c.cc.Invoke(ctx, WaCoreGateway_GetAllDevice_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *waCoreGatewayClient) SendMessage(ctx context.Context, in *MessageRequest, opts ...grpc.CallOption) (*MessageResponse, error) {
+	out := new(MessageResponse)
+	err := c.cc.Invoke(ctx, WaCoreGateway_SendMessage_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *waCoreGatewayClient) StreamConnectDevice(ctx context.Context, in *ConnectDeviceRequest, opts ...grpc.CallOption) (WaCoreGateway_StreamConnectDeviceClient, error) {
+	stream, err := c.cc.NewStream(ctx, &WaCoreGateway_ServiceDesc.Streams[0], WaCoreGateway_StreamConnectDevice_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &waCoreGatewayStreamConnectDeviceClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type WaCoreGateway_StreamConnectDeviceClient interface {
+	Recv() (*EventResponse, error)
+	grpc.ClientStream
+}
+
+type waCoreGatewayStreamConnectDeviceClient struct {
+	grpc.ClientStream
+}
+
+func (x *waCoreGatewayStreamConnectDeviceClient) Recv() (*EventResponse, error) {
+	m := new(EventResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // WaCoreGatewayServer is the server API for WaCoreGateway service.
 // All implementations must embed UnimplementedWaCoreGatewayServer
 // for forward compatibility
 type WaCoreGatewayServer interface {
-	GetClientContact(context.Context, *ContactRequest) (*ContactListResponse, error)
+	GetClientContact(context.Context, *ClientdataRequest) (*ContactListResponse, error)
+	GetClientGroup(context.Context, *ClientdataRequest) (*GroupListResponse, error)
+	GetAllDevice(context.Context, *emptypb.Empty) (*DeviceListResponse, error)
+	SendMessage(context.Context, *MessageRequest) (*MessageResponse, error)
+	StreamConnectDevice(*ConnectDeviceRequest, WaCoreGateway_StreamConnectDeviceServer) error
 	mustEmbedUnimplementedWaCoreGatewayServer()
 }
 
@@ -58,8 +130,20 @@ type WaCoreGatewayServer interface {
 type UnimplementedWaCoreGatewayServer struct {
 }
 
-func (UnimplementedWaCoreGatewayServer) GetClientContact(context.Context, *ContactRequest) (*ContactListResponse, error) {
+func (UnimplementedWaCoreGatewayServer) GetClientContact(context.Context, *ClientdataRequest) (*ContactListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetClientContact not implemented")
+}
+func (UnimplementedWaCoreGatewayServer) GetClientGroup(context.Context, *ClientdataRequest) (*GroupListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetClientGroup not implemented")
+}
+func (UnimplementedWaCoreGatewayServer) GetAllDevice(context.Context, *emptypb.Empty) (*DeviceListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllDevice not implemented")
+}
+func (UnimplementedWaCoreGatewayServer) SendMessage(context.Context, *MessageRequest) (*MessageResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendMessage not implemented")
+}
+func (UnimplementedWaCoreGatewayServer) StreamConnectDevice(*ConnectDeviceRequest, WaCoreGateway_StreamConnectDeviceServer) error {
+	return status.Errorf(codes.Unimplemented, "method StreamConnectDevice not implemented")
 }
 func (UnimplementedWaCoreGatewayServer) mustEmbedUnimplementedWaCoreGatewayServer() {}
 
@@ -75,7 +159,7 @@ func RegisterWaCoreGatewayServer(s grpc.ServiceRegistrar, srv WaCoreGatewayServe
 }
 
 func _WaCoreGateway_GetClientContact_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ContactRequest)
+	in := new(ClientdataRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -87,9 +171,84 @@ func _WaCoreGateway_GetClientContact_Handler(srv interface{}, ctx context.Contex
 		FullMethod: WaCoreGateway_GetClientContact_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(WaCoreGatewayServer).GetClientContact(ctx, req.(*ContactRequest))
+		return srv.(WaCoreGatewayServer).GetClientContact(ctx, req.(*ClientdataRequest))
 	}
 	return interceptor(ctx, in, info, handler)
+}
+
+func _WaCoreGateway_GetClientGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ClientdataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WaCoreGatewayServer).GetClientGroup(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: WaCoreGateway_GetClientGroup_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WaCoreGatewayServer).GetClientGroup(ctx, req.(*ClientdataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WaCoreGateway_GetAllDevice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WaCoreGatewayServer).GetAllDevice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: WaCoreGateway_GetAllDevice_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WaCoreGatewayServer).GetAllDevice(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WaCoreGateway_SendMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MessageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WaCoreGatewayServer).SendMessage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: WaCoreGateway_SendMessage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WaCoreGatewayServer).SendMessage(ctx, req.(*MessageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _WaCoreGateway_StreamConnectDevice_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(ConnectDeviceRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(WaCoreGatewayServer).StreamConnectDevice(m, &waCoreGatewayStreamConnectDeviceServer{stream})
+}
+
+type WaCoreGateway_StreamConnectDeviceServer interface {
+	Send(*EventResponse) error
+	grpc.ServerStream
+}
+
+type waCoreGatewayStreamConnectDeviceServer struct {
+	grpc.ServerStream
+}
+
+func (x *waCoreGatewayStreamConnectDeviceServer) Send(m *EventResponse) error {
+	return x.ServerStream.SendMsg(m)
 }
 
 // WaCoreGateway_ServiceDesc is the grpc.ServiceDesc for WaCoreGateway service.
@@ -103,7 +262,25 @@ var WaCoreGateway_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "GetClientContact",
 			Handler:    _WaCoreGateway_GetClientContact_Handler,
 		},
+		{
+			MethodName: "GetClientGroup",
+			Handler:    _WaCoreGateway_GetClientGroup_Handler,
+		},
+		{
+			MethodName: "GetAllDevice",
+			Handler:    _WaCoreGateway_GetAllDevice_Handler,
+		},
+		{
+			MethodName: "SendMessage",
+			Handler:    _WaCoreGateway_SendMessage_Handler,
+		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "StreamConnectDevice",
+			Handler:       _WaCoreGateway_StreamConnectDevice_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "model/proto/wacore.proto",
 }

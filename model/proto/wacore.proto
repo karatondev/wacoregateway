@@ -1,23 +1,58 @@
 syntax = "proto3";
 
 option go_package = "model/pb";
-
 package wacoreproto;
 
+import "google/protobuf/empty.proto";
+
 service WaCoreGateway {
-  rpc GetClientContact (ContactRequest) returns (ContactListResponse) {}
+  rpc GetClientContact (ClientdataRequest) returns (ContactListResponse) {}
+  rpc GetClientGroup (ClientdataRequest) returns (GroupListResponse) {}
+  rpc GetAllDevice (google.protobuf.Empty) returns (DeviceListResponse) {}
+  rpc SendMessage (MessageRequest) returns (MessageResponse) {}
+  rpc StreamConnectDevice(ConnectDeviceRequest) returns (stream EventResponse);
 }
 
-message ContactRequest {
+message ClientdataRequest {
   string sender_jid = 1;
 }
 
-message ContactItem {
+message ClientdataItem {
   string jid = 1;
   string name = 2;
   string short = 3;
 }
 
 message ContactListResponse {
-  repeated ContactItem contacts = 1;
+  repeated ClientdataItem contacts = 1;
+}
+
+message GroupListResponse {
+  repeated ClientdataItem groups = 1;
+}
+
+message DeviceItem {
+  string jid = 1;
+}
+
+message DeviceListResponse {
+  repeated DeviceItem devices = 1;
+}
+
+message MessageRequest {
+  string sender_jid = 1;
+  string to = 2;
+  string message_text = 3;
+}
+
+message MessageResponse {
+  string id = 1;
+}
+
+message ConnectDeviceRequest {
+  string name = 1;
+}
+
+message EventResponse {
+  string qr = 1;
 }

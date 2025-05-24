@@ -9,6 +9,7 @@ package pb
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
 	sync "sync"
 )
@@ -20,7 +21,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type ContactRequest struct {
+type ClientdataRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -28,8 +29,8 @@ type ContactRequest struct {
 	SenderJid string `protobuf:"bytes,1,opt,name=sender_jid,json=senderJid,proto3" json:"sender_jid,omitempty"`
 }
 
-func (x *ContactRequest) Reset() {
-	*x = ContactRequest{}
+func (x *ClientdataRequest) Reset() {
+	*x = ClientdataRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_model_proto_wacore_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -37,13 +38,13 @@ func (x *ContactRequest) Reset() {
 	}
 }
 
-func (x *ContactRequest) String() string {
+func (x *ClientdataRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ContactRequest) ProtoMessage() {}
+func (*ClientdataRequest) ProtoMessage() {}
 
-func (x *ContactRequest) ProtoReflect() protoreflect.Message {
+func (x *ClientdataRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_model_proto_wacore_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -55,19 +56,19 @@ func (x *ContactRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ContactRequest.ProtoReflect.Descriptor instead.
-func (*ContactRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use ClientdataRequest.ProtoReflect.Descriptor instead.
+func (*ClientdataRequest) Descriptor() ([]byte, []int) {
 	return file_model_proto_wacore_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *ContactRequest) GetSenderJid() string {
+func (x *ClientdataRequest) GetSenderJid() string {
 	if x != nil {
 		return x.SenderJid
 	}
 	return ""
 }
 
-type ContactItem struct {
+type ClientdataItem struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -77,8 +78,8 @@ type ContactItem struct {
 	Short string `protobuf:"bytes,3,opt,name=short,proto3" json:"short,omitempty"`
 }
 
-func (x *ContactItem) Reset() {
-	*x = ContactItem{}
+func (x *ClientdataItem) Reset() {
+	*x = ClientdataItem{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_model_proto_wacore_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -86,13 +87,13 @@ func (x *ContactItem) Reset() {
 	}
 }
 
-func (x *ContactItem) String() string {
+func (x *ClientdataItem) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ContactItem) ProtoMessage() {}
+func (*ClientdataItem) ProtoMessage() {}
 
-func (x *ContactItem) ProtoReflect() protoreflect.Message {
+func (x *ClientdataItem) ProtoReflect() protoreflect.Message {
 	mi := &file_model_proto_wacore_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -104,26 +105,26 @@ func (x *ContactItem) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ContactItem.ProtoReflect.Descriptor instead.
-func (*ContactItem) Descriptor() ([]byte, []int) {
+// Deprecated: Use ClientdataItem.ProtoReflect.Descriptor instead.
+func (*ClientdataItem) Descriptor() ([]byte, []int) {
 	return file_model_proto_wacore_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *ContactItem) GetJid() string {
+func (x *ClientdataItem) GetJid() string {
 	if x != nil {
 		return x.Jid
 	}
 	return ""
 }
 
-func (x *ContactItem) GetName() string {
+func (x *ClientdataItem) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *ContactItem) GetShort() string {
+func (x *ClientdataItem) GetShort() string {
 	if x != nil {
 		return x.Short
 	}
@@ -135,7 +136,7 @@ type ContactListResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Contacts []*ContactItem `protobuf:"bytes,1,rep,name=contacts,proto3" json:"contacts,omitempty"`
+	Contacts []*ClientdataItem `protobuf:"bytes,1,rep,name=contacts,proto3" json:"contacts,omitempty"`
 }
 
 func (x *ContactListResponse) Reset() {
@@ -170,11 +171,356 @@ func (*ContactListResponse) Descriptor() ([]byte, []int) {
 	return file_model_proto_wacore_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *ContactListResponse) GetContacts() []*ContactItem {
+func (x *ContactListResponse) GetContacts() []*ClientdataItem {
 	if x != nil {
 		return x.Contacts
 	}
 	return nil
+}
+
+type GroupListResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Groups []*ClientdataItem `protobuf:"bytes,1,rep,name=groups,proto3" json:"groups,omitempty"`
+}
+
+func (x *GroupListResponse) Reset() {
+	*x = GroupListResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_model_proto_wacore_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GroupListResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GroupListResponse) ProtoMessage() {}
+
+func (x *GroupListResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_model_proto_wacore_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GroupListResponse.ProtoReflect.Descriptor instead.
+func (*GroupListResponse) Descriptor() ([]byte, []int) {
+	return file_model_proto_wacore_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *GroupListResponse) GetGroups() []*ClientdataItem {
+	if x != nil {
+		return x.Groups
+	}
+	return nil
+}
+
+type DeviceItem struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Jid string `protobuf:"bytes,1,opt,name=jid,proto3" json:"jid,omitempty"`
+}
+
+func (x *DeviceItem) Reset() {
+	*x = DeviceItem{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_model_proto_wacore_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *DeviceItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeviceItem) ProtoMessage() {}
+
+func (x *DeviceItem) ProtoReflect() protoreflect.Message {
+	mi := &file_model_proto_wacore_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeviceItem.ProtoReflect.Descriptor instead.
+func (*DeviceItem) Descriptor() ([]byte, []int) {
+	return file_model_proto_wacore_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *DeviceItem) GetJid() string {
+	if x != nil {
+		return x.Jid
+	}
+	return ""
+}
+
+type DeviceListResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Devices []*DeviceItem `protobuf:"bytes,1,rep,name=devices,proto3" json:"devices,omitempty"`
+}
+
+func (x *DeviceListResponse) Reset() {
+	*x = DeviceListResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_model_proto_wacore_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *DeviceListResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeviceListResponse) ProtoMessage() {}
+
+func (x *DeviceListResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_model_proto_wacore_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeviceListResponse.ProtoReflect.Descriptor instead.
+func (*DeviceListResponse) Descriptor() ([]byte, []int) {
+	return file_model_proto_wacore_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *DeviceListResponse) GetDevices() []*DeviceItem {
+	if x != nil {
+		return x.Devices
+	}
+	return nil
+}
+
+type MessageRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	SenderJid   string `protobuf:"bytes,1,opt,name=sender_jid,json=senderJid,proto3" json:"sender_jid,omitempty"`
+	To          string `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty"`
+	MessageText string `protobuf:"bytes,3,opt,name=message_text,json=messageText,proto3" json:"message_text,omitempty"`
+}
+
+func (x *MessageRequest) Reset() {
+	*x = MessageRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_model_proto_wacore_proto_msgTypes[6]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *MessageRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MessageRequest) ProtoMessage() {}
+
+func (x *MessageRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_model_proto_wacore_proto_msgTypes[6]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MessageRequest.ProtoReflect.Descriptor instead.
+func (*MessageRequest) Descriptor() ([]byte, []int) {
+	return file_model_proto_wacore_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *MessageRequest) GetSenderJid() string {
+	if x != nil {
+		return x.SenderJid
+	}
+	return ""
+}
+
+func (x *MessageRequest) GetTo() string {
+	if x != nil {
+		return x.To
+	}
+	return ""
+}
+
+func (x *MessageRequest) GetMessageText() string {
+	if x != nil {
+		return x.MessageText
+	}
+	return ""
+}
+
+type MessageResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+}
+
+func (x *MessageResponse) Reset() {
+	*x = MessageResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_model_proto_wacore_proto_msgTypes[7]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *MessageResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MessageResponse) ProtoMessage() {}
+
+func (x *MessageResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_model_proto_wacore_proto_msgTypes[7]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MessageResponse.ProtoReflect.Descriptor instead.
+func (*MessageResponse) Descriptor() ([]byte, []int) {
+	return file_model_proto_wacore_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *MessageResponse) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type ConnectDeviceRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+}
+
+func (x *ConnectDeviceRequest) Reset() {
+	*x = ConnectDeviceRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_model_proto_wacore_proto_msgTypes[8]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ConnectDeviceRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ConnectDeviceRequest) ProtoMessage() {}
+
+func (x *ConnectDeviceRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_model_proto_wacore_proto_msgTypes[8]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ConnectDeviceRequest.ProtoReflect.Descriptor instead.
+func (*ConnectDeviceRequest) Descriptor() ([]byte, []int) {
+	return file_model_proto_wacore_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *ConnectDeviceRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+type EventResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Qr string `protobuf:"bytes,1,opt,name=qr,proto3" json:"qr,omitempty"`
+}
+
+func (x *EventResponse) Reset() {
+	*x = EventResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_model_proto_wacore_proto_msgTypes[9]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *EventResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EventResponse) ProtoMessage() {}
+
+func (x *EventResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_model_proto_wacore_proto_msgTypes[9]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EventResponse.ProtoReflect.Descriptor instead.
+func (*EventResponse) Descriptor() ([]byte, []int) {
+	return file_model_proto_wacore_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *EventResponse) GetQr() string {
+	if x != nil {
+		return x.Qr
+	}
+	return ""
 }
 
 var File_model_proto_wacore_proto protoreflect.FileDescriptor
@@ -182,27 +528,74 @@ var File_model_proto_wacore_proto protoreflect.FileDescriptor
 var file_model_proto_wacore_proto_rawDesc = []byte{
 	0x0a, 0x18, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x77, 0x61,
 	0x63, 0x6f, 0x72, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x0b, 0x77, 0x61, 0x63, 0x6f,
-	0x72, 0x65, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x2f, 0x0a, 0x0e, 0x43, 0x6f, 0x6e, 0x74, 0x61,
-	0x63, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1d, 0x0a, 0x0a, 0x73, 0x65, 0x6e,
+	0x72, 0x65, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x1b, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2f,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2f, 0x65, 0x6d, 0x70, 0x74, 0x79, 0x2e, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x22, 0x32, 0x0a, 0x11, 0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x64, 0x61,
+	0x74, 0x61, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1d, 0x0a, 0x0a, 0x73, 0x65, 0x6e,
 	0x64, 0x65, 0x72, 0x5f, 0x6a, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x73,
-	0x65, 0x6e, 0x64, 0x65, 0x72, 0x4a, 0x69, 0x64, 0x22, 0x49, 0x0a, 0x0b, 0x43, 0x6f, 0x6e, 0x74,
-	0x61, 0x63, 0x74, 0x49, 0x74, 0x65, 0x6d, 0x12, 0x10, 0x0a, 0x03, 0x6a, 0x69, 0x64, 0x18, 0x01,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6a, 0x69, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d,
-	0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x14, 0x0a,
-	0x05, 0x73, 0x68, 0x6f, 0x72, 0x74, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x73, 0x68,
-	0x6f, 0x72, 0x74, 0x22, 0x4b, 0x0a, 0x13, 0x43, 0x6f, 0x6e, 0x74, 0x61, 0x63, 0x74, 0x4c, 0x69,
-	0x73, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x34, 0x0a, 0x08, 0x63, 0x6f,
-	0x6e, 0x74, 0x61, 0x63, 0x74, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x18, 0x2e, 0x77,
-	0x61, 0x63, 0x6f, 0x72, 0x65, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x43, 0x6f, 0x6e, 0x74, 0x61,
-	0x63, 0x74, 0x49, 0x74, 0x65, 0x6d, 0x52, 0x08, 0x63, 0x6f, 0x6e, 0x74, 0x61, 0x63, 0x74, 0x73,
-	0x32, 0x64, 0x0a, 0x0d, 0x57, 0x61, 0x43, 0x6f, 0x72, 0x65, 0x47, 0x61, 0x74, 0x65, 0x77, 0x61,
-	0x79, 0x12, 0x53, 0x0a, 0x10, 0x47, 0x65, 0x74, 0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x43, 0x6f,
-	0x6e, 0x74, 0x61, 0x63, 0x74, 0x12, 0x1b, 0x2e, 0x77, 0x61, 0x63, 0x6f, 0x72, 0x65, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x2e, 0x43, 0x6f, 0x6e, 0x74, 0x61, 0x63, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65,
-	0x73, 0x74, 0x1a, 0x20, 0x2e, 0x77, 0x61, 0x63, 0x6f, 0x72, 0x65, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x2e, 0x43, 0x6f, 0x6e, 0x74, 0x61, 0x63, 0x74, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x65, 0x73, 0x70,
-	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x0a, 0x5a, 0x08, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x2f,
-	0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x65, 0x6e, 0x64, 0x65, 0x72, 0x4a, 0x69, 0x64, 0x22, 0x4c, 0x0a, 0x0e, 0x43, 0x6c, 0x69, 0x65,
+	0x6e, 0x74, 0x64, 0x61, 0x74, 0x61, 0x49, 0x74, 0x65, 0x6d, 0x12, 0x10, 0x0a, 0x03, 0x6a, 0x69,
+	0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6a, 0x69, 0x64, 0x12, 0x12, 0x0a, 0x04,
+	0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65,
+	0x12, 0x14, 0x0a, 0x05, 0x73, 0x68, 0x6f, 0x72, 0x74, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x05, 0x73, 0x68, 0x6f, 0x72, 0x74, 0x22, 0x4e, 0x0a, 0x13, 0x43, 0x6f, 0x6e, 0x74, 0x61, 0x63,
+	0x74, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x37, 0x0a,
+	0x08, 0x63, 0x6f, 0x6e, 0x74, 0x61, 0x63, 0x74, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32,
+	0x1b, 0x2e, 0x77, 0x61, 0x63, 0x6f, 0x72, 0x65, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x43, 0x6c,
+	0x69, 0x65, 0x6e, 0x74, 0x64, 0x61, 0x74, 0x61, 0x49, 0x74, 0x65, 0x6d, 0x52, 0x08, 0x63, 0x6f,
+	0x6e, 0x74, 0x61, 0x63, 0x74, 0x73, 0x22, 0x48, 0x0a, 0x11, 0x47, 0x72, 0x6f, 0x75, 0x70, 0x4c,
+	0x69, 0x73, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x33, 0x0a, 0x06, 0x67,
+	0x72, 0x6f, 0x75, 0x70, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x1b, 0x2e, 0x77, 0x61,
+	0x63, 0x6f, 0x72, 0x65, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74,
+	0x64, 0x61, 0x74, 0x61, 0x49, 0x74, 0x65, 0x6d, 0x52, 0x06, 0x67, 0x72, 0x6f, 0x75, 0x70, 0x73,
+	0x22, 0x1e, 0x0a, 0x0a, 0x44, 0x65, 0x76, 0x69, 0x63, 0x65, 0x49, 0x74, 0x65, 0x6d, 0x12, 0x10,
+	0x0a, 0x03, 0x6a, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6a, 0x69, 0x64,
+	0x22, 0x47, 0x0a, 0x12, 0x44, 0x65, 0x76, 0x69, 0x63, 0x65, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x65,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x31, 0x0a, 0x07, 0x64, 0x65, 0x76, 0x69, 0x63, 0x65,
+	0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x17, 0x2e, 0x77, 0x61, 0x63, 0x6f, 0x72, 0x65,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x44, 0x65, 0x76, 0x69, 0x63, 0x65, 0x49, 0x74, 0x65, 0x6d,
+	0x52, 0x07, 0x64, 0x65, 0x76, 0x69, 0x63, 0x65, 0x73, 0x22, 0x62, 0x0a, 0x0e, 0x4d, 0x65, 0x73,
+	0x73, 0x61, 0x67, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1d, 0x0a, 0x0a, 0x73,
+	0x65, 0x6e, 0x64, 0x65, 0x72, 0x5f, 0x6a, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x09, 0x73, 0x65, 0x6e, 0x64, 0x65, 0x72, 0x4a, 0x69, 0x64, 0x12, 0x0e, 0x0a, 0x02, 0x74, 0x6f,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x74, 0x6f, 0x12, 0x21, 0x0a, 0x0c, 0x6d, 0x65,
+	0x73, 0x73, 0x61, 0x67, 0x65, 0x5f, 0x74, 0x65, 0x78, 0x74, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x0b, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x54, 0x65, 0x78, 0x74, 0x22, 0x21, 0x0a,
+	0x0f, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
+	0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64,
+	0x22, 0x2a, 0x0a, 0x14, 0x43, 0x6f, 0x6e, 0x6e, 0x65, 0x63, 0x74, 0x44, 0x65, 0x76, 0x69, 0x63,
+	0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x22, 0x1f, 0x0a, 0x0d,
+	0x45, 0x76, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x0e, 0x0a,
+	0x02, 0x71, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x71, 0x72, 0x32, 0xaa, 0x03,
+	0x0a, 0x0d, 0x57, 0x61, 0x43, 0x6f, 0x72, 0x65, 0x47, 0x61, 0x74, 0x65, 0x77, 0x61, 0x79, 0x12,
+	0x56, 0x0a, 0x10, 0x47, 0x65, 0x74, 0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x43, 0x6f, 0x6e, 0x74,
+	0x61, 0x63, 0x74, 0x12, 0x1e, 0x2e, 0x77, 0x61, 0x63, 0x6f, 0x72, 0x65, 0x70, 0x72, 0x6f, 0x74,
+	0x6f, 0x2e, 0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x64, 0x61, 0x74, 0x61, 0x52, 0x65, 0x71, 0x75,
+	0x65, 0x73, 0x74, 0x1a, 0x20, 0x2e, 0x77, 0x61, 0x63, 0x6f, 0x72, 0x65, 0x70, 0x72, 0x6f, 0x74,
+	0x6f, 0x2e, 0x43, 0x6f, 0x6e, 0x74, 0x61, 0x63, 0x74, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x65, 0x73,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x52, 0x0a, 0x0e, 0x47, 0x65, 0x74, 0x43, 0x6c,
+	0x69, 0x65, 0x6e, 0x74, 0x47, 0x72, 0x6f, 0x75, 0x70, 0x12, 0x1e, 0x2e, 0x77, 0x61, 0x63, 0x6f,
+	0x72, 0x65, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x64, 0x61,
+	0x74, 0x61, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1e, 0x2e, 0x77, 0x61, 0x63, 0x6f,
+	0x72, 0x65, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x47, 0x72, 0x6f, 0x75, 0x70, 0x4c, 0x69, 0x73,
+	0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x49, 0x0a, 0x0c, 0x47,
+	0x65, 0x74, 0x41, 0x6c, 0x6c, 0x44, 0x65, 0x76, 0x69, 0x63, 0x65, 0x12, 0x16, 0x2e, 0x67, 0x6f,
+	0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d,
+	0x70, 0x74, 0x79, 0x1a, 0x1f, 0x2e, 0x77, 0x61, 0x63, 0x6f, 0x72, 0x65, 0x70, 0x72, 0x6f, 0x74,
+	0x6f, 0x2e, 0x44, 0x65, 0x76, 0x69, 0x63, 0x65, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x4a, 0x0a, 0x0b, 0x53, 0x65, 0x6e, 0x64, 0x4d, 0x65,
+	0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x1b, 0x2e, 0x77, 0x61, 0x63, 0x6f, 0x72, 0x65, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x2e, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65,
+	0x73, 0x74, 0x1a, 0x1c, 0x2e, 0x77, 0x61, 0x63, 0x6f, 0x72, 0x65, 0x70, 0x72, 0x6f, 0x74, 0x6f,
+	0x2e, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
+	0x22, 0x00, 0x12, 0x56, 0x0a, 0x13, 0x53, 0x74, 0x72, 0x65, 0x61, 0x6d, 0x43, 0x6f, 0x6e, 0x6e,
+	0x65, 0x63, 0x74, 0x44, 0x65, 0x76, 0x69, 0x63, 0x65, 0x12, 0x21, 0x2e, 0x77, 0x61, 0x63, 0x6f,
+	0x72, 0x65, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x43, 0x6f, 0x6e, 0x6e, 0x65, 0x63, 0x74, 0x44,
+	0x65, 0x76, 0x69, 0x63, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1a, 0x2e, 0x77,
+	0x61, 0x63, 0x6f, 0x72, 0x65, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x45, 0x76, 0x65, 0x6e, 0x74,
+	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x30, 0x01, 0x42, 0x0a, 0x5a, 0x08, 0x6d, 0x6f,
+	0x64, 0x65, 0x6c, 0x2f, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -217,21 +610,39 @@ func file_model_proto_wacore_proto_rawDescGZIP() []byte {
 	return file_model_proto_wacore_proto_rawDescData
 }
 
-var file_model_proto_wacore_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_model_proto_wacore_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_model_proto_wacore_proto_goTypes = []interface{}{
-	(*ContactRequest)(nil),      // 0: wacoreproto.ContactRequest
-	(*ContactItem)(nil),         // 1: wacoreproto.ContactItem
-	(*ContactListResponse)(nil), // 2: wacoreproto.ContactListResponse
+	(*ClientdataRequest)(nil),    // 0: wacoreproto.ClientdataRequest
+	(*ClientdataItem)(nil),       // 1: wacoreproto.ClientdataItem
+	(*ContactListResponse)(nil),  // 2: wacoreproto.ContactListResponse
+	(*GroupListResponse)(nil),    // 3: wacoreproto.GroupListResponse
+	(*DeviceItem)(nil),           // 4: wacoreproto.DeviceItem
+	(*DeviceListResponse)(nil),   // 5: wacoreproto.DeviceListResponse
+	(*MessageRequest)(nil),       // 6: wacoreproto.MessageRequest
+	(*MessageResponse)(nil),      // 7: wacoreproto.MessageResponse
+	(*ConnectDeviceRequest)(nil), // 8: wacoreproto.ConnectDeviceRequest
+	(*EventResponse)(nil),        // 9: wacoreproto.EventResponse
+	(*emptypb.Empty)(nil),        // 10: google.protobuf.Empty
 }
 var file_model_proto_wacore_proto_depIdxs = []int32{
-	1, // 0: wacoreproto.ContactListResponse.contacts:type_name -> wacoreproto.ContactItem
-	0, // 1: wacoreproto.WaCoreGateway.GetClientContact:input_type -> wacoreproto.ContactRequest
-	2, // 2: wacoreproto.WaCoreGateway.GetClientContact:output_type -> wacoreproto.ContactListResponse
-	2, // [2:3] is the sub-list for method output_type
-	1, // [1:2] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	1,  // 0: wacoreproto.ContactListResponse.contacts:type_name -> wacoreproto.ClientdataItem
+	1,  // 1: wacoreproto.GroupListResponse.groups:type_name -> wacoreproto.ClientdataItem
+	4,  // 2: wacoreproto.DeviceListResponse.devices:type_name -> wacoreproto.DeviceItem
+	0,  // 3: wacoreproto.WaCoreGateway.GetClientContact:input_type -> wacoreproto.ClientdataRequest
+	0,  // 4: wacoreproto.WaCoreGateway.GetClientGroup:input_type -> wacoreproto.ClientdataRequest
+	10, // 5: wacoreproto.WaCoreGateway.GetAllDevice:input_type -> google.protobuf.Empty
+	6,  // 6: wacoreproto.WaCoreGateway.SendMessage:input_type -> wacoreproto.MessageRequest
+	8,  // 7: wacoreproto.WaCoreGateway.StreamConnectDevice:input_type -> wacoreproto.ConnectDeviceRequest
+	2,  // 8: wacoreproto.WaCoreGateway.GetClientContact:output_type -> wacoreproto.ContactListResponse
+	3,  // 9: wacoreproto.WaCoreGateway.GetClientGroup:output_type -> wacoreproto.GroupListResponse
+	5,  // 10: wacoreproto.WaCoreGateway.GetAllDevice:output_type -> wacoreproto.DeviceListResponse
+	7,  // 11: wacoreproto.WaCoreGateway.SendMessage:output_type -> wacoreproto.MessageResponse
+	9,  // 12: wacoreproto.WaCoreGateway.StreamConnectDevice:output_type -> wacoreproto.EventResponse
+	8,  // [8:13] is the sub-list for method output_type
+	3,  // [3:8] is the sub-list for method input_type
+	3,  // [3:3] is the sub-list for extension type_name
+	3,  // [3:3] is the sub-list for extension extendee
+	0,  // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_model_proto_wacore_proto_init() }
@@ -241,7 +652,7 @@ func file_model_proto_wacore_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_model_proto_wacore_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ContactRequest); i {
+			switch v := v.(*ClientdataRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -253,7 +664,7 @@ func file_model_proto_wacore_proto_init() {
 			}
 		}
 		file_model_proto_wacore_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ContactItem); i {
+			switch v := v.(*ClientdataItem); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -276,6 +687,90 @@ func file_model_proto_wacore_proto_init() {
 				return nil
 			}
 		}
+		file_model_proto_wacore_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GroupListResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_model_proto_wacore_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DeviceItem); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_model_proto_wacore_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DeviceListResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_model_proto_wacore_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*MessageRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_model_proto_wacore_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*MessageResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_model_proto_wacore_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ConnectDeviceRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_model_proto_wacore_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*EventResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -283,7 +778,7 @@ func file_model_proto_wacore_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_model_proto_wacore_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -9,8 +9,12 @@ import (
 )
 
 type ServiceInterface interface {
-	LoadNewClient(ctx context.Context, container *sqlstore.Container) error
+	LoadClients(ctx context.Context, container *sqlstore.Container) error
+	ProcessGetDevices(ctx context.Context) (*proto.DeviceListResponse, error)
 	ProcessGetContact(ctx context.Context, senderJID string) (*proto.ContactListResponse, error)
+	ProcessGetGroup(ctx context.Context, senderJID string) (*proto.GroupListResponse, error)
+	ProcessSendMessage(ctx context.Context, req *proto.MessageRequest) (*proto.MessageResponse, error)
+	ConnectDevice(ctx context.Context, container *sqlstore.Container, req *proto.ConnectDeviceRequest, stream proto.WaCoreGateway_StreamConnectDeviceServer) error
 }
 
 type service struct {
