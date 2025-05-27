@@ -9,7 +9,7 @@ service WaCoreGateway {
   rpc GetClientContact (ClientdataRequest) returns (ContactListResponse) {}
   rpc GetClientGroup (ClientdataRequest) returns (GroupListResponse) {}
   rpc GetAllDevice (google.protobuf.Empty) returns (DeviceListResponse) {}
-  rpc SendMessage (MessageRequest) returns (MessageResponse) {}
+  rpc SendMessage (MessagePayload) returns (MessageResponse) {}
   rpc StreamConnectDevice(ConnectDeviceRequest) returns (stream EventResponse);
 }
 
@@ -39,10 +39,16 @@ message DeviceListResponse {
   repeated DeviceItem devices = 1;
 }
 
-message MessageRequest {
+message MessagePayload {
   string sender_jid = 1;
   string to = 2;
-  string message_text = 3;
+  string type = 3;
+  string text = 4;
+  string file_path = 5;
+  double latitude = 6;
+  double longitude = 7;
+  string file_name = 8;
+  string mime_type = 9;
 }
 
 message MessageResponse {

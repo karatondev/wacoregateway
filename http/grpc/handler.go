@@ -45,15 +45,12 @@ func (s *server) GetAllDevice(ctx context.Context, empty *emptypb.Empty) (*proto
 	return result, nil
 }
 
-func (s *server) SendMessage(ctx context.Context, req *proto.MessageRequest) (*proto.MessageResponse, error) {
+func (s *server) SendMessage(ctx context.Context, req *proto.MessagePayload) (*proto.MessageResponse, error) {
 	if req.SenderJid == "" {
 		return nil, status.Errorf(codes.PermissionDenied, "senderJID param cannot be empty")
 	}
 	if req.To == "" {
 		return nil, status.Errorf(codes.PermissionDenied, "to param cannot be empty")
-	}
-	if req.MessageText == "" {
-		return nil, status.Errorf(codes.PermissionDenied, "message param cannot be empty")
 	}
 
 	result, err := s.service.ProcessSendMessage(ctx, req)

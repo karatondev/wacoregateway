@@ -34,7 +34,7 @@ type WaCoreGatewayClient interface {
 	GetClientContact(ctx context.Context, in *ClientdataRequest, opts ...grpc.CallOption) (*ContactListResponse, error)
 	GetClientGroup(ctx context.Context, in *ClientdataRequest, opts ...grpc.CallOption) (*GroupListResponse, error)
 	GetAllDevice(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*DeviceListResponse, error)
-	SendMessage(ctx context.Context, in *MessageRequest, opts ...grpc.CallOption) (*MessageResponse, error)
+	SendMessage(ctx context.Context, in *MessagePayload, opts ...grpc.CallOption) (*MessageResponse, error)
 	StreamConnectDevice(ctx context.Context, in *ConnectDeviceRequest, opts ...grpc.CallOption) (WaCoreGateway_StreamConnectDeviceClient, error)
 }
 
@@ -73,7 +73,7 @@ func (c *waCoreGatewayClient) GetAllDevice(ctx context.Context, in *emptypb.Empt
 	return out, nil
 }
 
-func (c *waCoreGatewayClient) SendMessage(ctx context.Context, in *MessageRequest, opts ...grpc.CallOption) (*MessageResponse, error) {
+func (c *waCoreGatewayClient) SendMessage(ctx context.Context, in *MessagePayload, opts ...grpc.CallOption) (*MessageResponse, error) {
 	out := new(MessageResponse)
 	err := c.cc.Invoke(ctx, WaCoreGateway_SendMessage_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -121,7 +121,7 @@ type WaCoreGatewayServer interface {
 	GetClientContact(context.Context, *ClientdataRequest) (*ContactListResponse, error)
 	GetClientGroup(context.Context, *ClientdataRequest) (*GroupListResponse, error)
 	GetAllDevice(context.Context, *emptypb.Empty) (*DeviceListResponse, error)
-	SendMessage(context.Context, *MessageRequest) (*MessageResponse, error)
+	SendMessage(context.Context, *MessagePayload) (*MessageResponse, error)
 	StreamConnectDevice(*ConnectDeviceRequest, WaCoreGateway_StreamConnectDeviceServer) error
 	mustEmbedUnimplementedWaCoreGatewayServer()
 }
@@ -139,7 +139,7 @@ func (UnimplementedWaCoreGatewayServer) GetClientGroup(context.Context, *Clientd
 func (UnimplementedWaCoreGatewayServer) GetAllDevice(context.Context, *emptypb.Empty) (*DeviceListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllDevice not implemented")
 }
-func (UnimplementedWaCoreGatewayServer) SendMessage(context.Context, *MessageRequest) (*MessageResponse, error) {
+func (UnimplementedWaCoreGatewayServer) SendMessage(context.Context, *MessagePayload) (*MessageResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendMessage not implemented")
 }
 func (UnimplementedWaCoreGatewayServer) StreamConnectDevice(*ConnectDeviceRequest, WaCoreGateway_StreamConnectDeviceServer) error {
@@ -213,7 +213,7 @@ func _WaCoreGateway_GetAllDevice_Handler(srv interface{}, ctx context.Context, d
 }
 
 func _WaCoreGateway_SendMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MessageRequest)
+	in := new(MessagePayload)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -225,7 +225,7 @@ func _WaCoreGateway_SendMessage_Handler(srv interface{}, ctx context.Context, de
 		FullMethod: WaCoreGateway_SendMessage_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(WaCoreGatewayServer).SendMessage(ctx, req.(*MessageRequest))
+		return srv.(WaCoreGatewayServer).SendMessage(ctx, req.(*MessagePayload))
 	}
 	return interceptor(ctx, in, info, handler)
 }
