@@ -3,7 +3,6 @@ module github.com/faisolarifin/wacoregateway
 go 1.23.3
 
 require (
-	github.com/docker/docker v28.1.1+incompatible
 	github.com/go-playground/validator/v10 v10.20.0
 	github.com/google/uuid v1.6.0
 	github.com/lib/pq v1.10.9
@@ -45,5 +44,4 @@ require (
 	golang.org/x/text v0.25.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20241223144023-3abc09e42ca8 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	gotest.tools/v3 v3.5.2 // indirect
 )

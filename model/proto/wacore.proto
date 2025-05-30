@@ -39,26 +39,79 @@ message DeviceListResponse {
   repeated DeviceItem devices = 1;
 }
 
-message MessagePayload {
-  string sender_jid = 1;
-  string to = 2;
-  string type = 3;
-  string text = 4;
-  string file_path = 5;
-  double latitude = 6;
-  double longitude = 7;
-  string file_name = 8;
-  string mime_type = 9;
-}
-
-message MessageResponse {
-  string id = 1;
-}
-
 message ConnectDeviceRequest {
   string name = 1;
 }
 
 message EventResponse {
   string qr = 1;
+}
+
+
+message MessagePayload {
+  string sender_jid = 1;
+  string to = 2;
+  string type = 3;
+  string text = 4;
+
+  Media image = 5;
+  Media video = 6;
+
+  Audio audio = 7;
+  Document document = 8;
+
+  Location location = 9;
+  Contact vcard = 10;
+  Contacts contacts = 11;
+
+  LiveLocation live_location = 12;
+}
+
+message MessageResponse {
+  string id = 1;
+}
+
+// ==== Tipe media umum ====
+
+message Media {
+  string url = 1;
+  string caption = 2;
+  string mimetype = 3;
+}
+
+message Audio {
+  string url = 1;
+  string mime_type = 2;
+  bool ptt = 3; // push-to-talk (true = voice note)
+}
+
+message Document {
+  string url = 1;
+  string filename = 2;
+  string mimetype = 3;
+  string title = 4;
+}
+
+// ==== Lokasi dan kontak ====
+
+message Location {
+  double latitude = 1;
+  double longitude = 2;
+  string name = 3;
+  string address = 4;
+}
+
+message LiveLocation {
+  double latitude = 1;
+  double longitude = 2;
+  uint32 duration = 3; // dalam detik
+}
+
+message Contact {
+  string name = 1;
+  string phone = 2;
+}
+
+message Contacts {
+  repeated Contact list = 1;
 }

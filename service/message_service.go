@@ -3,7 +3,10 @@ package service
 import (
 	"context"
 	"errors"
+	"io"
+	"net/http"
 	"os"
+	"strings"
 
 	"github.com/faisolarifin/wacoregateway/cache"
 	proto "github.com/faisolarifin/wacoregateway/model/pb"
@@ -42,10 +45,27 @@ func (s *service) ProcessSendMessage(ctx context.Context, req *proto.MessagePayl
 		}
 
 	case "image":
-		data, err := os.ReadFile(req.FilePath)
-		if err != nil {
-			return nil, err
+		url := req.Image.Url
+		var data []byte
+
+		if strings.HasPrefix(url, "http://") || strings.HasPrefix(url, "https://") {
+			resp, err := http.Get(url)
+			if err != nil {
+				return nil, err
+			}
+			defer resp.Body.Close()
+
+			data, err = io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+		} else {
+			data, err = os.ReadFile(req.Image.Url)
+			if err != nil {
+				return nil, err
+			}
 		}
+
 		uploaded, err := client.Upload(context.Background(), data, whatsmeow.MediaImage)
 		if err != nil {
 			return nil, err
@@ -53,17 +73,18 @@ func (s *service) ProcessSendMessage(ctx context.Context, req *proto.MessagePayl
 		msg = &waProto.Message{
 			ImageMessage: &waProto.ImageMessage{
 				URL:           &uploaded.URL,
-				Mimetype:      protoStr("image/jpeg"),
-				Caption:       protoStr(req.Text),
+				Mimetype:      protoStr(req.Image.Mimetype),
+				Caption:       protoStr(req.Image.Caption),
 				FileSHA256:    uploaded.FileSHA256,
 				FileEncSHA256: uploaded.FileEncSHA256,
 				MediaKey:      uploaded.MediaKey,
 				FileLength:    &uploaded.FileLength,
+				DirectPath:    protoStr(uploaded.DirectPath),
 			},
 		}
 
 	case "video":
-		data, err := os.ReadFile(req.FilePath)
+		data, err := os.ReadFile(req.Video.Url)
 		if err != nil {
 			return nil, err
 		}
@@ -74,17 +95,18 @@ func (s *service) ProcessSendMessage(ctx context.Context, req *proto.MessagePayl
 		msg = &waProto.Message{
 			VideoMessage: &waProto.VideoMessage{
 				URL:           &uploaded.URL,
-				Mimetype:      protoStr("video/mp4"),
-				Caption:       protoStr(req.Text),
+				Mimetype:      protoStr(req.Video.Mimetype),
+				Caption:       protoStr(req.Video.Caption),
 				FileSHA256:    uploaded.FileSHA256,
 				FileEncSHA256: uploaded.FileEncSHA256,
 				MediaKey:      uploaded.MediaKey,
 				FileLength:    &uploaded.FileLength,
+				DirectPath:    protoStr(uploaded.DirectPath),
 			},
 		}
 
 	case "audio":
-		data, err := os.ReadFile(req.FilePath)
+		data, err := os.ReadFile(req.Audio.Url)
 		if err != nil {
 			return nil, err
 		}
@@ -95,16 +117,18 @@ func (s *service) ProcessSendMessage(ctx context.Context, req *proto.MessagePayl
 		msg = &waProto.Message{
 			AudioMessage: &waProto.AudioMessage{
 				URL:           &uploaded.URL,
-				Mimetype:      protoStr("audio/ogg"),
+				Mimetype:      protoStr(req.Audio.MimeType),
 				FileSHA256:    uploaded.FileSHA256,
 				FileEncSHA256: uploaded.FileEncSHA256,
 				MediaKey:      uploaded.MediaKey,
 				FileLength:    &uploaded.FileLength,
+				PTT:           protoBool(req.Audio.Ptt),
+				DirectPath:    protoStr(uploaded.DirectPath),
 			},
 		}
 
 	case "document":
-		data, err := os.ReadFile(req.FilePath)
+		data, err := os.ReadFile(req.Document.Url)
 		if err != nil {
 			return nil, err
 		}
@@ -115,20 +139,24 @@ func (s *service) ProcessSendMessage(ctx context.Context, req *proto.MessagePayl
 		msg = &waProto.Message{
 			DocumentMessage: &waProto.DocumentMessage{
 				URL:           &uploaded.URL,
-				Mimetype:      protoStr(req.MimeType),
-				FileName:      protoStr(req.FileName),
+				Mimetype:      protoStr(req.Document.Mimetype),
+				FileName:      protoStr(req.Document.Filename),
 				FileSHA256:    uploaded.FileSHA256,
 				FileEncSHA256: uploaded.FileEncSHA256,
 				MediaKey:      uploaded.MediaKey,
 				FileLength:    &uploaded.FileLength,
+				Title:         protoStr(req.Document.Title),
+				DirectPath:    protoStr(uploaded.DirectPath),
 			},
 		}
 
 	case "location":
 		msg = &waProto.Message{
 			LocationMessage: &waProto.LocationMessage{
-				DegreesLatitude:  protoFloat(req.Latitude),
-				DegreesLongitude: protoFloat(req.Longitude),
+				DegreesLatitude:  protoFloat(req.Location.Latitude),
+				DegreesLongitude: protoFloat(req.Location.Longitude),
+				Name:             protoStr(req.Location.Name),
+				Address:          protoStr(req.Location.Address),
 			},
 		}
 
