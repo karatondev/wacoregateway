@@ -30,6 +30,18 @@ type Config struct {
 		Database string   `mapstructure:"database"`
 		Options  []string `mapstructure:"options"`
 	} `mapstructure:"postgres"`
+	AMQP struct {
+		Scheme             string `mapstructure:"scheme"`
+		Host               string `mapstructure:"host"`
+		Port               int    `mapstructure:"port"`
+		Username           string `mapstructure:"username"`
+		Password           string `mapstructure:"password"`
+		Concurrent         int    `mapstructure:"concurrent"`
+		PrefetchCount      int    `mapstructure:"prefetch_count"`
+		PrefetchSize       int    `mapstructure:"prefetch_size"`
+		Global             bool   `mapstructure:"global"`
+		WaCoreGatewayQueue string `mapstructure:"wacoregateway_queue"`
+	} `mapstructure:"amqp"`
 }
 
 // LoadConfig reads configuration from file or environment variables.

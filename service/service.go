@@ -5,6 +5,7 @@ import (
 
 	proto "github.com/faisolarifin/wacoregateway/model/pb"
 	"github.com/faisolarifin/wacoregateway/provider"
+	"github.com/faisolarifin/wacoregateway/provider/messaging"
 	"go.mau.fi/whatsmeow/store/sqlstore"
 )
 
@@ -20,11 +21,13 @@ type ServiceInterface interface {
 type service struct {
 	container *sqlstore.Container
 	logger    provider.ILogger
+	publisher messaging.AMQPPublisherInterface
 }
 
-func NewService(container *sqlstore.Container, logger provider.ILogger) ServiceInterface {
+func NewService(container *sqlstore.Container, logger provider.ILogger, publisher messaging.AMQPPublisherInterface) ServiceInterface {
 	return &service{
 		container: container,
 		logger:    logger,
+		publisher: publisher,
 	}
 }

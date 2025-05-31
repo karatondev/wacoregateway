@@ -12,6 +12,7 @@ import (
 	api "github.com/faisolarifin/wacoregateway/http/grpc"
 	"github.com/faisolarifin/wacoregateway/model/constant"
 	"github.com/faisolarifin/wacoregateway/provider"
+	"github.com/faisolarifin/wacoregateway/provider/messaging"
 	"github.com/faisolarifin/wacoregateway/service"
 	"github.com/faisolarifin/wacoregateway/util"
 	"github.com/go-playground/validator/v10"
@@ -30,11 +31,16 @@ func main() {
 	if err != nil {
 		logger.Errorf(provider.AppLog, "Failed to connect to database:", err)
 	}
+	conn, err := provider.NewAMQPConn()
+	if err != nil {
+		log.Fatal(err)
+	}
+	publisher := messaging.NewAMQPPublisher(conn)
 	logger.Infof(provider.AppLog, "Application started")
 
 	ctx := context.WithValue(context.Background(), constant.CtxReqIDKey, "MAIN")
 	go func(logger provider.ILogger) {
-		service := service.NewService(container, logger)
+		service := service.NewService(container, logger, publisher)
 		if err := service.LoadClients(ctx, container); err != nil {
 			logger.Errorf(provider.AppLog, "Failed to load new client: %v", err)
 		}

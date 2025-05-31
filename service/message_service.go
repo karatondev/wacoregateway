@@ -19,6 +19,15 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+const (
+	Text     = "text"
+	Image    = "image"
+	Video    = "video"
+	Document = "document"
+	Audio    = "audio"
+	Location = "location"
+)
+
 func (s *service) ProcessSendMessage(ctx context.Context, req *proto.MessagePayload) (*proto.MessageResponse, error) {
 
 	client := cache.GetClient(req.SenderJid)
@@ -31,20 +40,16 @@ func (s *service) ProcessSendMessage(ctx context.Context, req *proto.MessagePayl
 		return nil, status.Errorf(codes.InvalidArgument, "invalid recipient JID: %v", err)
 	}
 
-	// resp, err := client.SendMessage(context.Background(), jid, &waE2E.Message{
-	// 	Conversation: gproto.String(req.MessageText),
-	// })
-
 	var msg *waProto.Message
 
 	switch req.Type {
 
-	case "text":
+	case Text:
 		msg = &waProto.Message{
 			Conversation: protoStr(req.Text),
 		}
 
-	case "image":
+	case Image:
 		url := req.Image.Url
 		var data []byte
 
@@ -83,7 +88,7 @@ func (s *service) ProcessSendMessage(ctx context.Context, req *proto.MessagePayl
 			},
 		}
 
-	case "video":
+	case Video:
 		data, err := os.ReadFile(req.Video.Url)
 		if err != nil {
 			return nil, err
@@ -105,7 +110,7 @@ func (s *service) ProcessSendMessage(ctx context.Context, req *proto.MessagePayl
 			},
 		}
 
-	case "audio":
+	case Audio:
 		data, err := os.ReadFile(req.Audio.Url)
 		if err != nil {
 			return nil, err
@@ -127,7 +132,7 @@ func (s *service) ProcessSendMessage(ctx context.Context, req *proto.MessagePayl
 			},
 		}
 
-	case "document":
+	case Document:
 		data, err := os.ReadFile(req.Document.Url)
 		if err != nil {
 			return nil, err
@@ -150,59 +155,13 @@ func (s *service) ProcessSendMessage(ctx context.Context, req *proto.MessagePayl
 			},
 		}
 
-	case "location":
+	case Location:
 		msg = &waProto.Message{
 			LocationMessage: &waProto.LocationMessage{
 				DegreesLatitude:  protoFloat(req.Location.Latitude),
 				DegreesLongitude: protoFloat(req.Location.Longitude),
 				Name:             protoStr(req.Location.Name),
 				Address:          protoStr(req.Location.Address),
-			},
-		}
-
-	case "button":
-		msg = &waProto.Message{
-			ButtonsMessage: &waProto.ButtonsMessage{
-				ContentText: protoStr("Halo! Pilih tombol berikut:"),
-				FooterText:  protoStr("Bot WhatsApp"),
-				Buttons: []*waProto.ButtonsMessage_Button{
-					{
-						ButtonID:   protoStr("btn_1"),
-						ButtonText: &waProto.ButtonsMessage_Button_ButtonText{DisplayText: protoStr("Tombol 1")},
-						Type:       waProto.ButtonsMessage_Button_RESPONSE.Enum(),
-					},
-					{
-						ButtonID:   protoStr("btn_2"),
-						ButtonText: &waProto.ButtonsMessage_Button_ButtonText{DisplayText: protoStr("Tombol 2")},
-						Type:       waProto.ButtonsMessage_Button_RESPONSE.Enum(),
-					},
-				},
-				HeaderType: waProto.ButtonsMessage_UNKNOWN.Enum(),
-			},
-		}
-	case "list":
-		msg = &waProto.Message{
-			ListMessage: &waProto.ListMessage{
-				Title:       protoStr("Halo 👋"),
-				Description: protoStr("Pilih salah satu menu di bawah ini:"),
-				ButtonText:  protoStr("Lihat Menu"),
-				Sections: []*waProto.ListMessage_Section{
-					{
-						Title: protoStr("Menu Utama"),
-						Rows: []*waProto.ListMessage_Row{
-							{
-								RowID:       protoStr("menu_1"),
-								Title:       protoStr("Layanan 1"),
-								Description: protoStr("Deskripsi layanan 1"),
-							},
-							{
-								RowID:       protoStr("menu_2"),
-								Title:       protoStr("Layanan 2"),
-								Description: protoStr("Deskripsi layanan 2"),
-							},
-						},
-					},
-				},
 			},
 		}
 

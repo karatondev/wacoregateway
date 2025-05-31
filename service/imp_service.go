@@ -7,6 +7,8 @@ import (
 	"github.com/faisolarifin/wacoregateway/cache"
 	proto "github.com/faisolarifin/wacoregateway/model/pb"
 	"github.com/faisolarifin/wacoregateway/provider"
+	"github.com/faisolarifin/wacoregateway/provider/messaging"
+	"github.com/faisolarifin/wacoregateway/util"
 	"go.mau.fi/whatsmeow"
 	"go.mau.fi/whatsmeow/store/sqlstore"
 	"go.mau.fi/whatsmeow/types"
@@ -32,7 +34,9 @@ func (s *service) LoadClients(ctx context.Context, container *sqlstore.Container
 			fmt.Printf("failed to connect device %s: %v\n", dev.ID.String(), err)
 			continue
 		}
-		client.AddEventHandler(eventHandler)
+		client.AddEventHandler(func(evt interface{}) {
+			eventHandler(s.publisher, evt)
+		})
 		cache.SetClient(dev.ID.String(), client)
 	}
 
@@ -47,7 +51,9 @@ func (s *service) ConnectDevice(ctx context.Context, container *sqlstore.Contain
 	device := container.NewDevice()
 
 	client := whatsmeow.NewClient(device, clientLog)
-	client.AddEventHandler(eventHandler)
+	client.AddEventHandler(func(evt interface{}) {
+		eventHandler(s.publisher, evt)
+	})
 
 	cache.SetClient(jid.String(), client)
 
@@ -58,7 +64,7 @@ func (s *service) ConnectDevice(ctx context.Context, container *sqlstore.Contain
 		}()
 
 		for evt := range qrChan {
-			if evt.Event == "code" {
+			if evt.Event == whatsmeow.QRChannelEventCode {
 				if err := stream.Send(&proto.EventResponse{
 					Qr: evt.Code,
 				}); err != nil {
@@ -134,7 +140,7 @@ func (s *service) ProcessGetDevices(ctx context.Context) (*proto.DeviceListRespo
 	return result, nil
 }
 
-func eventHandler(evt interface{}) {
+func eventHandler(publisher messaging.AMQPPublisherInterface, evt interface{}) {
 	switch v := evt.(type) {
 	case *events.Connected:
 		fmt.Println("Client connected")
@@ -148,10 +154,21 @@ func eventHandler(evt interface{}) {
 	case *events.Message:
 		sender := v.Info.Sender.String()
 		content := v.Message.GetConversation()
+
+		rawData := map[string]interface{}{
+			"sender":   sender,
+			"content":  content,
+			"metadata": map[string]interface{}{},
+		}
+
+		err := publisher.Publish(context.Background(), util.Configuration.AMQP.WaCoreGatewayQueue, rawData, func(options *messaging.AMQPPublisherOptions) {})
+		if err != nil {
+			fmt.Println("Failed to publish message: %v", err)
+		}
+
 		fmt.Println("New message from %s: %s\n", sender, content)
 
 		msg := v.Message
-
 		switch {
 		case msg.GetConversation() != "":
 			fmt.Println("Text: %s", msg.GetConversation())
