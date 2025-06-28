@@ -56,24 +56,24 @@ func (s *service) ProcessSendMessage(ctx context.Context, req *proto.MessagePayl
 		if strings.HasPrefix(url, "http://") || strings.HasPrefix(url, "https://") {
 			resp, err := http.Get(url)
 			if err != nil {
-				return nil, err
+				return nil, status.Errorf(codes.Internal, "failed to get image %v", err)
 			}
 			defer resp.Body.Close()
 
 			data, err = io.ReadAll(resp.Body)
 			if err != nil {
-				return nil, err
+				return nil, status.Errorf(codes.Internal, "failed get bytes the image: %v", err)
 			}
 		} else {
 			data, err = os.ReadFile(req.Image.Url)
 			if err != nil {
-				return nil, err
+				return nil, status.Errorf(codes.Internal, "failed get local image %v", err)
 			}
 		}
 
 		uploaded, err := client.Upload(context.Background(), data, whatsmeow.MediaImage)
 		if err != nil {
-			return nil, err
+			return nil, status.Errorf(codes.Internal, "failed upload image to whatsapp: %v", err)
 		}
 		msg = &waProto.Message{
 			ImageMessage: &waProto.ImageMessage{

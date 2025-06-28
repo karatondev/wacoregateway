@@ -49,6 +49,7 @@ func HandleMessageEvents(deviceID string, publisher messaging.AMQPPublisherInter
 		content := v.Message.GetConversation()
 
 		rawData := map[string]interface{}{
+			"deviceID": deviceID,
 			"sender":   sender,
 			"content":  content,
 			"metadata": map[string]interface{}{},
