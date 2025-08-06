@@ -21,6 +21,7 @@ type Config struct {
 		MaxAge     int    `mapstructure:"max_age"`
 		Compress   bool   `mapstructure:"compress"`
 		LocalTime  bool   `mapstructure:"local_time"`
+		Level      string `mapstructure:"level"`
 	} `mapstructure:"logger"`
 	Postgres struct {
 		Host     string   `mapstructure:"host"`

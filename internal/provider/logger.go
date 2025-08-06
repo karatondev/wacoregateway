@@ -2,7 +2,6 @@ package provider
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"os"
@@ -36,8 +35,9 @@ type ILogger interface {
 }
 
 type logrusLogger struct {
-	appLog   *logrus.Logger
-	mongoLog *logrus.Logger
+	appLog      *logrus.Logger
+	mongoLog    *logrus.Logger
+	postgresLog *logrus.Logger
 }
 
 type CustomFormatter struct {
@@ -47,53 +47,37 @@ type CustomFormatter struct {
 
 func (f *CustomFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	timestamp := entry.Time.Format(f.TimestampFormat)
-	level := strings.ToUpper(entry.Level.String())
+	level := entry.Level.String()
 	uniqueID := uuid.New().String()
 
-	// Handle REQUEST_ID
 	if reqID, ok := entry.Data["REQUEST_ID"]; ok {
 		entry.Data["x-request-id"] = reqID
-		entry.Data["uniqueId"] = uniqueID
+		entry.Data["uniqueId"] = reqID
 		delete(entry.Data, "REQUEST_ID")
 	}
 
-	// Override uniqueID if already provided
-	if val, ok := entry.Data["uniqueId"]; ok {
-		if strID, ok := val.(string); ok {
-			uniqueID = strID
-		}
+	if uniqueId, ok := entry.Data["uniqueId"]; ok {
+		uniqueID = uniqueId.(string)
 	} else {
 		entry.Data["uniqueId"] = uniqueID
 	}
 
-	// Extract and remove stacktrace
+	message := entry.Message
 	stacktrace := ""
 	if stack, ok := entry.Data["stacktrace"]; ok {
-		stacktrace = fmt.Sprintf("%v", stack)
 		delete(entry.Data, "stacktrace")
+		stacktrace = fmt.Sprintf("\nSTACKTRACE:\n%s", stack)
 	}
 
-	// Prepare the log structure
-	logEntry := map[string]interface{}{
-		"timestamp": timestamp,
-		"level":     level,
-		"message":   entry.Message,
-		// "uniqueId":  uniqueID,
-
-		"fields": entry.Data,
+	// Add other fields
+	for key, value := range entry.Data {
+		if key != "uniqueId" && key != "x-request-id" {
+			message = fmt.Sprintf("%s - %s=%v", message, key, value)
+		}
 	}
 
-	if stacktrace != "" {
-		logEntry["stacktrace"] = stacktrace
-	}
-
-	// Encode as JSON
-	logJSON, err := json.Marshal(logEntry)
-	if err != nil {
-		return nil, fmt.Errorf("failed to marshal log entry: %w", err)
-	}
-
-	return append(logJSON, '\n'), nil
+	logLine := fmt.Sprintf("%s - %s - %s - %s%s\n", timestamp, strings.ToUpper(level), uniqueID, message, stacktrace)
+	return []byte(logLine), nil
 }
 
 func NewLogger() ILogger {
@@ -101,9 +85,17 @@ func NewLogger() ILogger {
 	appErrorLogFile := path.Join(util.Configuration.Logger.Dir, "error", fmt.Sprintf("%s.app.error.log", util.Configuration.Logger.FileName))
 
 	appLog := logrus.New()
-	// if util.Configuration.Logger.Level == "debug" {
-	// 	appLog.SetLevel(logrus.DebugLevel)
-	// }
+	if util.Configuration.Logger.Level == "debug" {
+		appLog.SetLevel(logrus.DebugLevel)
+	}
+	mongoLog := logrus.New()
+	if util.Configuration.Logger.Level == "debug" {
+		mongoLog.SetLevel(logrus.DebugLevel)
+	}
+	postgresLog := logrus.New()
+	if util.Configuration.Logger.Level == "debug" {
+		postgresLog.SetLevel(logrus.DebugLevel)
+	}
 
 	maxAge := util.Configuration.Logger.MaxAge
 	maxBackups := util.Configuration.Logger.MaxBackups
@@ -129,6 +121,7 @@ func NewLogger() ILogger {
 		},
 	})
 
+	// Send logs with level higher than warning to stderr
 	appLog.AddHook(&WriterHook{
 		Writer: dailylogger.NewDailyRotateLogger(appErrorLogFile, maxSize, maxBackups, maxAge, localTime, compress),
 		LogLevels: []logrus.Level{
@@ -139,7 +132,7 @@ func NewLogger() ILogger {
 		},
 	})
 
-	return &logrusLogger{appLog: appLog}
+	return &logrusLogger{appLog: appLog, mongoLog: mongoLog, postgresLog: postgresLog}
 }
 
 func (l *logrusLogger) Infof(logType LogType, format string, args ...interface{}) {
@@ -189,8 +182,10 @@ func (l *logrusLogger) checkType(logType LogType) *logrus.Logger {
 
 	if logType == AppLog {
 		logger = l.appLog
-	} else {
+	} else if logType == MongoLog {
 		logger = l.mongoLog
+	} else {
+		logger = l.postgresLog
 	}
 
 	return logger

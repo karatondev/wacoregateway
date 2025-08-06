@@ -46,7 +46,7 @@ func (s *service) ConnectDevice(ctx context.Context, container *sqlstore.Contain
 	device := container.NewDevice()
 
 	client := whatsmeow.NewClient(device, clientLog)
-	AttachAllHandlers(device.ID.String(), s.publisher, client)
+	AttachAllHandlers(jid.String(), s.publisher, client)
 
 	cache.SetClient(jid.String(), client)
 

@@ -9,6 +9,7 @@ logger:
   max_age: 90                               # in days, set 0 for unlimited days
   compress: true
   local_time: true
+  level: debug                              # debug, info, warn, error: true
 
 postgres:
   host: sgp.domcloud.co

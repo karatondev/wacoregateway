@@ -24,7 +24,7 @@ func AttachAllHandlers(deviceID string, publisher messaging.AMQPPublisherInterfa
 func HandleQREvents(deviceID string, evt interface{}) {
 	switch v := evt.(type) {
 	case *events.QR:
-		logrus.Infof("[%s] QR: %s", deviceID)
+		logrus.Infof("[%s] QR: %s", deviceID, v.Codes)
 
 	case *events.Receipt:
 		fmt.Println("Receipt for message ID %s from %s ",
