@@ -11,13 +11,15 @@ logger:
   local_time: true
 
 postgres:
-  host: localhost
+  host: sgp.domcloud.co
   port: 5432
-  username: postgres
-  password: 12345
-  database: whatsappdb
+  username: trusty-employ-cav
+  password: wkc(Aw9K8H)_4Tm8T6
+  database: trusty_employ_cav_db
   options:
     - sslmode=disable
+    - search_path=whatsmeow
+
 amqp:
   scheme: "amqp"
   host: localhost

@@ -2,11 +2,11 @@ package service
 
 import (
 	"context"
-	"fmt"
 
-	"github.com/faisolarifin/wacoregateway/cache"
-	proto "github.com/faisolarifin/wacoregateway/model/pb"
-	"github.com/faisolarifin/wacoregateway/provider"
+	"wacoregateway/internal/cache"
+	"wacoregateway/internal/provider"
+	proto "wacoregateway/model/pb"
+
 	"go.mau.fi/whatsmeow"
 	"go.mau.fi/whatsmeow/store/sqlstore"
 	"go.mau.fi/whatsmeow/types"
@@ -20,7 +20,7 @@ func (s *service) LoadClients(ctx context.Context, container *sqlstore.Container
 
 	devices, err := container.GetAllDevices(ctx)
 	if err != nil {
-		s.logger.Errorf(provider.AppLog, "Failed to get device store: %v", err)
+		s.logger.Errorfctx(provider.AppLog, ctx, false, "Failed to get device store: %v", err)
 		return err
 	}
 
@@ -28,7 +28,7 @@ func (s *service) LoadClients(ctx context.Context, container *sqlstore.Container
 		client := whatsmeow.NewClient(dev, clientLog)
 		err := client.Connect()
 		if err != nil {
-			fmt.Printf("failed to connect device %s: %v\n", dev.ID.String(), err)
+			s.logger.Errorfctx(provider.AppLog, ctx, false, "failed to connect device %s: %v", dev.ID.String(), err)
 			continue
 		}
 		AttachAllHandlers(dev.ID.String(), s.publisher, client)

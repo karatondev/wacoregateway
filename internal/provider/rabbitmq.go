@@ -3,8 +3,8 @@ package provider
 import (
 	"fmt"
 
-	"github.com/faisolarifin/wacoregateway/provider/amqpx"
-	"github.com/faisolarifin/wacoregateway/util"
+	"wacoregateway/internal/provider/amqpx"
+	"wacoregateway/util"
 )
 
 func NewAMQPConn() (amqpx.ChannelReaderCloser, error) {

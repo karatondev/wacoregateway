@@ -6,7 +6,8 @@ import (
 
 	"sync"
 
-	"github.com/faisolarifin/wacoregateway/provider/amqpx"
+	"wacoregateway/internal/provider/amqpx"
+
 	"github.com/pkg/errors"
 	amqp "github.com/rabbitmq/amqp091-go"
 )

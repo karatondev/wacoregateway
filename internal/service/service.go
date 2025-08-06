@@ -3,9 +3,10 @@ package service
 import (
 	"context"
 
-	proto "github.com/faisolarifin/wacoregateway/model/pb"
-	"github.com/faisolarifin/wacoregateway/provider"
-	"github.com/faisolarifin/wacoregateway/provider/messaging"
+	"wacoregateway/internal/provider"
+	"wacoregateway/internal/provider/messaging"
+	proto "wacoregateway/model/pb"
+
 	"go.mau.fi/whatsmeow/store/sqlstore"
 )
 

@@ -4,8 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/faisolarifin/wacoregateway/provider/messaging"
-	"github.com/faisolarifin/wacoregateway/util"
+	"wacoregateway/internal/provider/messaging"
+	"wacoregateway/util"
+
 	"github.com/sirupsen/logrus"
 	"go.mau.fi/whatsmeow"
 	"go.mau.fi/whatsmeow/types/events"

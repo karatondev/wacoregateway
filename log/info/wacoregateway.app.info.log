@@ -1,0 +1,30 @@
+{"fields":{"uniqueId":"afcd0b2d-075d-4091-810d-a8553681c168"},"level":"INFO","message":"Application started","timestamp":"2025-08-06 10:00:18.010"}
+{"fields":{"uniqueId":"bce65355-334a-4cf0-b6ec-a46ec3ec8d25"},"level":"INFO","message":"gRPC server listening on :50051","timestamp":"2025-08-06 10:00:18.017"}
+{"fields":{"uniqueId":"ceef1ce3-3b6a-430c-a3b8-fcc8483d0536"},"level":"INFO","message":"Receiving signal: interrupt","timestamp":"2025-08-06 10:01:48.448"}
+{"fields":{"uniqueId":"5a626aa5-8a6f-4479-9f10-dd6ac1a4bf54"},"level":"INFO","message":"Successfully stop Application.","timestamp":"2025-08-06 10:01:48.449"}
+{"fields":{"uniqueId":"1e2d9e81-7dc2-4875-9a15-2b01bc0a55ff","x-request-id":"MAIN"},"level":"INFO","message":"Application started","timestamp":"2025-08-06 10:02:27.712"}
+{"fields":{"uniqueId":"0fa2a8bd-8d9e-42c9-ba37-1f4be0bb0054"},"level":"INFO","message":"gRPC server listening on :50051","timestamp":"2025-08-06 10:02:27.716"}
+{"fields":{"uniqueId":"f46b8e2c-8eac-4b71-8ace-5f7e07f1aace"},"level":"INFO","message":"Receiving signal: interrupt","timestamp":"2025-08-06 10:08:05.036"}
+{"fields":{"uniqueId":"e8fbb4cd-d854-4638-ab60-9f10c125fb46"},"level":"INFO","message":"Successfully stop Application.","timestamp":"2025-08-06 10:08:05.036"}
+{"fields":{"uniqueId":"f04cbdca-f2ad-4d9d-856b-6fd580ddd508","x-request-id":"MAIN"},"level":"INFO","message":"Application started","timestamp":"2025-08-06 10:08:13.363"}
+{"fields":{"uniqueId":"9826d57e-d5b5-4c26-8a9e-c56dc2a6a206","x-request-id":"MAIN"},"level":"INFO","message":"gRPC server listening on :50051","timestamp":"2025-08-06 10:08:13.373"}
+{"fields":{"uniqueId":"74b61818-39d7-45a0-8d6c-fc544b1e7a73","x-request-id":"MAIN"},"level":"INFO","message":"Application started","timestamp":"2025-08-06 10:13:59.973"}
+{"fields":{"uniqueId":"f9375329-f6ec-4e74-b453-e1cbcdf21c49","x-request-id":"MAIN"},"level":"INFO","message":"gRPC server listening on :50051","timestamp":"2025-08-06 10:13:59.977"}
+{"fields":{"uniqueId":"9467b1dc-d8ed-4b0b-a409-8e292ccc350e","x-request-id":"MAIN"},"level":"INFO","message":"Application started","timestamp":"2025-08-06 10:15:07.850"}
+{"fields":{"uniqueId":"2307d2b6-7e01-459d-91ad-fadc9100333f","x-request-id":"MAIN"},"level":"INFO","message":"gRPC server listening on :50051","timestamp":"2025-08-06 10:15:07.856"}
+{"fields":{"uniqueId":"a9764bc8-07a7-4f6c-8438-532455c86e8e","x-request-id":"MAIN"},"level":"INFO","message":"Application started","timestamp":"2025-08-06 10:20:42.400"}
+{"fields":{"uniqueId":"3856fa8c-50eb-44d4-bda2-745138d64b4f","x-request-id":"MAIN"},"level":"INFO","message":"gRPC server listening on :50051","timestamp":"2025-08-06 10:20:42.456"}
+{"fields":{"uniqueId":"13b19378-7ead-4279-84c6-0c7f5306e3f0","x-request-id":"MAIN"},"level":"INFO","message":"Receiving signal: interrupt","timestamp":"2025-08-06 10:21:11.815"}
+{"fields":{"uniqueId":"a9bc36df-f3d6-452b-892e-c0674ddf7170","x-request-id":"MAIN"},"level":"INFO","message":"Successfully stop Application.","timestamp":"2025-08-06 10:21:11.815"}
+{"fields":{"uniqueId":"d112b207-de8d-436a-8273-fc2f66c67be9","x-request-id":"MAIN"},"level":"INFO","message":"Application started","timestamp":"2025-08-06 10:21:54.040"}
+{"fields":{"uniqueId":"a66b1f0c-9898-4707-a053-67812c366c70","x-request-id":"MAIN"},"level":"INFO","message":"gRPC server listening on :50051","timestamp":"2025-08-06 10:21:54.703"}
+{"fields":{"uniqueId":"027bbd52-7d14-4793-9814-cc53d60e8c47","x-request-id":"MAIN"},"level":"INFO","message":"Application started","timestamp":"2025-08-06 10:22:26.559"}
+{"fields":{"uniqueId":"a1cb3fe3-59c2-4c14-b315-11682c672aaa","x-request-id":"MAIN"},"level":"INFO","message":"gRPC server listening on :50051","timestamp":"2025-08-06 10:22:27.190"}
+{"fields":{"uniqueId":"9d89b5ab-829c-4498-a02e-2e55f71f1840","x-request-id":"MAIN"},"level":"INFO","message":"Receiving signal: interrupt","timestamp":"2025-08-06 10:24:41.642"}
+{"fields":{"uniqueId":"b814108b-fb4f-4d47-8cd7-d321cc9091be","x-request-id":"MAIN"},"level":"INFO","message":"Successfully stop Application.","timestamp":"2025-08-06 10:24:41.642"}
+{"fields":{"uniqueId":"d0f80a05-bf16-4ad7-92d9-a4a953df2d88","x-request-id":"MAIN"},"level":"INFO","message":"Application started","timestamp":"2025-08-06 10:25:08.247"}
+{"fields":{"uniqueId":"e0487b6c-0f85-4daa-b18e-2d52fe49f51c","x-request-id":"MAIN"},"level":"INFO","message":"gRPC server listening on :50051","timestamp":"2025-08-06 10:25:09.227"}
+{"fields":{"uniqueId":"55dad1a6-5e15-4387-bf10-6427d65d9e5b","x-request-id":"MAIN"},"level":"INFO","message":"Application started","timestamp":"2025-08-06 10:30:07.835"}
+{"fields":{"uniqueId":"8acde5a9-509d-4d46-b349-ae63e4cbfd8a","x-request-id":"MAIN"},"level":"INFO","message":"gRPC server listening on :50051","timestamp":"2025-08-06 10:30:08.673"}
+{"fields":{"uniqueId":"c331cb9d-6fc7-4fe6-a462-c1e8f7a46803","x-request-id":"MAIN"},"level":"INFO","message":"Receiving signal: interrupt","timestamp":"2025-08-06 10:30:23.244"}
+{"fields":{"uniqueId":"605fc6a8-830f-4994-8b14-943d2839ad9a","x-request-id":"MAIN"},"level":"INFO","message":"Successfully stop Application.","timestamp":"2025-08-06 10:30:23.245"}

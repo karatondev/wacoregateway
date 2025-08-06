@@ -1,15 +1,18 @@
 package provider
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
 	"os"
 	"path"
+	"runtime/debug"
+	"strings"
+	"wacoregateway/internal/provider/dailylogger"
+	"wacoregateway/model/constant"
+	"wacoregateway/util"
 
-	"github.com/faisolarifin/wacoregateway/model/constant"
-	"github.com/faisolarifin/wacoregateway/provider/dailylogger"
-	"github.com/faisolarifin/wacoregateway/util"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 )
@@ -19,17 +22,22 @@ type LogType int
 const (
 	AppLog = iota
 	MongoLog
+	PostgresLog
 )
 
 type ILogger interface {
 	Infof(logType LogType, format string, args ...interface{})
+	Infofctx(logType LogType, ctx context.Context, format string, args ...interface{})
 	Errorf(logType LogType, format string, args ...interface{})
+	Errorfctx(logType LogType, ctx context.Context, addStackTrace bool, format string, args ...interface{})
 	Debugf(logType LogType, format string, args ...interface{})
+	Debugfctx(logType LogType, ctx context.Context, format string, args ...interface{})
 	WithFields(logType LogType, fields logrus.Fields) *logrus.Entry
 }
 
 type logrusLogger struct {
-	appLog *logrus.Logger
+	appLog   *logrus.Logger
+	mongoLog *logrus.Logger
 }
 
 type CustomFormatter struct {
@@ -38,67 +46,65 @@ type CustomFormatter struct {
 }
 
 func (f *CustomFormatter) Format(entry *logrus.Entry) ([]byte, error) {
-	data := make(logrus.Fields, len(entry.Data)+4)
-
-	// Add timestamp
-	if t, ok := data[logrus.FieldKeyTime]; ok {
-		data[f.FieldMap[logrus.FieldKeyTime]] = t
-	} else {
-		data[f.FieldMap[logrus.FieldKeyTime]] = entry.Time.Format(f.TimestampFormat)
-	}
-
-	// Add message as JSON
-	messageBytes, err := json.Marshal(entry.Message)
-	if err != nil {
-		return nil, fmt.Errorf("failed to marshal message: %w", err)
-	}
-	data[f.FieldMap[logrus.FieldKeyMsg]] = json.RawMessage(messageBytes)
-
+	timestamp := entry.Time.Format(f.TimestampFormat)
+	level := strings.ToUpper(entry.Level.String())
 	uniqueID := uuid.New().String()
 
-	if reqID, ok := entry.Data[constant.ReqIDLog]; ok {
-		entry.Data["uniqueId"] = reqID
+	// Handle REQUEST_ID
+	if reqID, ok := entry.Data["REQUEST_ID"]; ok {
+		entry.Data["x-request-id"] = reqID
+		entry.Data["uniqueId"] = uniqueID
+		delete(entry.Data, "REQUEST_ID")
 	}
 
-	// Add uniqueId and xRequestId fields
-	if uniqueId, ok := entry.Data["uniqueId"]; ok {
-		data["uniqueId"] = uniqueId
-	} else {
-		data["uniqueId"] = uniqueID
-	}
-
-	if xRequestId, ok := entry.Data[constant.ReqIDLog]; ok {
-		data[constant.ReqIDLog] = xRequestId
-	} else {
-		data[constant.ReqIDLog] = uniqueID
-	}
-
-	fields := make(map[string]interface{})
-
-	// Add other fields
-	for k, v := range entry.Data {
-		if k != "uniqueId" && k != constant.ReqIDLog {
-			fields[k] = v
+	// Override uniqueID if already provided
+	if val, ok := entry.Data["uniqueId"]; ok {
+		if strID, ok := val.(string); ok {
+			uniqueID = strID
 		}
+	} else {
+		entry.Data["uniqueId"] = uniqueID
 	}
 
-	fields[entry.Level.String()] = entry.Message
+	// Extract and remove stacktrace
+	stacktrace := ""
+	if stack, ok := entry.Data["stacktrace"]; ok {
+		stacktrace = fmt.Sprintf("%v", stack)
+		delete(entry.Data, "stacktrace")
+	}
 
-	data["message"] = fields
+	// Prepare the log structure
+	logEntry := map[string]interface{}{
+		"timestamp": timestamp,
+		"level":     level,
+		"message":   entry.Message,
+		// "uniqueId":  uniqueID,
 
-	serialized, err := json.Marshal(data)
+		"fields": entry.Data,
+	}
+
+	if stacktrace != "" {
+		logEntry["stacktrace"] = stacktrace
+	}
+
+	// Encode as JSON
+	logJSON, err := json.Marshal(logEntry)
 	if err != nil {
-		return nil, fmt.Errorf("failed to marshal fields to JSON: %w", err)
+		return nil, fmt.Errorf("failed to marshal log entry: %w", err)
 	}
-	return append(serialized, '\n'), nil
+
+	return append(logJSON, '\n'), nil
 }
 
-func NewLogger() *logrusLogger {
-	// workingDirectory, _ := os.Getwd()
-	// logDirectory := path.Join(workingDirectory, "log")
+func NewLogger() ILogger {
+	appInfoLogFile := path.Join(util.Configuration.Logger.Dir, "info", fmt.Sprintf("%s.app.info.log", util.Configuration.Logger.FileName))
 	appErrorLogFile := path.Join(util.Configuration.Logger.Dir, "error", fmt.Sprintf("%s.app.error.log", util.Configuration.Logger.FileName))
 
 	appLog := logrus.New()
+	// if util.Configuration.Logger.Level == "debug" {
+	// 	appLog.SetLevel(logrus.DebugLevel)
+	// }
+
 	maxAge := util.Configuration.Logger.MaxAge
 	maxBackups := util.Configuration.Logger.MaxBackups
 	maxSize := util.Configuration.Logger.MaxSize
@@ -115,7 +121,14 @@ func NewLogger() *logrusLogger {
 
 	appLog.SetFormatter(formatter)
 
-	// Send logs with level higher than warning to stderr
+	appLog.AddHook(&WriterHook{
+		Writer: dailylogger.NewDailyRotateLogger(appInfoLogFile, maxSize, maxBackups, maxAge, localTime, compress),
+		LogLevels: []logrus.Level{
+			logrus.InfoLevel,
+			logrus.DebugLevel,
+		},
+	})
+
 	appLog.AddHook(&WriterHook{
 		Writer: dailylogger.NewDailyRotateLogger(appErrorLogFile, maxSize, maxBackups, maxAge, localTime, compress),
 		LogLevels: []logrus.Level{
@@ -133,15 +146,37 @@ func (l *logrusLogger) Infof(logType LogType, format string, args ...interface{}
 	logger := l.checkType(logType)
 	logger.Infof(format, args...)
 }
+func (l *logrusLogger) Infofctx(logType LogType, ctx context.Context, format string, args ...interface{}) {
+	logger := l.checkType(logType)
+	requestID, _ := ctx.Value(constant.CtxReqIDKey).(string)
+	logger.WithField("REQUEST_ID", requestID).Infof(format, args...)
+}
 
 func (l *logrusLogger) Errorf(logType LogType, format string, args ...interface{}) {
 	logger := l.checkType(logType)
 	logger.Errorf(format, args...)
 }
 
+func (l *logrusLogger) Errorfctx(logType LogType, ctx context.Context, addStackTrace bool, format string, args ...interface{}) {
+	logger := l.checkType(logType)
+	requestID, _ := ctx.Value(constant.CtxReqIDKey).(string)
+	log := logger.WithField("REQUEST_ID", requestID)
+	if addStackTrace {
+		stacktrace := string(debug.Stack())
+		log = log.WithField("stacktrace", stacktrace)
+	}
+	log.Errorf(format, args...)
+}
+
 func (l *logrusLogger) Debugf(logType LogType, format string, args ...interface{}) {
 	logger := l.checkType(logType)
 	logger.Debugf(format, args...)
+}
+
+func (l *logrusLogger) Debugfctx(logType LogType, ctx context.Context, format string, args ...interface{}) {
+	logger := l.checkType(logType)
+	requestID, _ := ctx.Value(constant.CtxReqIDKey).(string)
+	logger.WithField("REQUEST_ID", requestID).Debugf(format, args...)
 }
 
 func (l *logrusLogger) WithFields(logType LogType, fields logrus.Fields) *logrus.Entry {
@@ -152,7 +187,11 @@ func (l *logrusLogger) WithFields(logType LogType, fields logrus.Fields) *logrus
 func (l *logrusLogger) checkType(logType LogType) *logrus.Logger {
 	var logger *logrus.Logger
 
-	logger = l.appLog
+	if logType == AppLog {
+		logger = l.appLog
+	} else {
+		logger = l.mongoLog
+	}
 
 	return logger
 }
@@ -190,6 +229,13 @@ func InitLogDir() {
 	logDirectory := path.Join(workingDirectory)
 	if _, err := os.Stat(logDirectory); os.IsNotExist(err) {
 		if err := util.CreateDirectory(logDirectory); err != nil {
+			panic(err)
+		}
+	}
+
+	infoLogDirectory := path.Join(logDirectory, "info")
+	if _, err := os.Stat(infoLogDirectory); os.IsNotExist(err) {
+		if err := util.CreateDirectory(infoLogDirectory); err != nil {
 			panic(err)
 		}
 	}

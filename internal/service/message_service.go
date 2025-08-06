@@ -8,8 +8,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/faisolarifin/wacoregateway/cache"
-	proto "github.com/faisolarifin/wacoregateway/model/pb"
+	"wacoregateway/internal/cache"
+	proto "wacoregateway/model/pb"
+
 	"go.mau.fi/whatsmeow"
 
 	// waProto "go.mau.fi/whatsmeow/binary/proto"

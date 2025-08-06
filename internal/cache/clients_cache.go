@@ -12,8 +12,8 @@ func SetClient(key string, client *whatsmeow.Client) {
 	clients[key] = client
 }
 
-func SetAllClients(clients map[string]*whatsmeow.Client) {
-	clients = clients
+func SetAllClients(newClients map[string]*whatsmeow.Client) {
+	clients = newClients
 }
 
 func GetAllClients() map[string]*whatsmeow.Client {

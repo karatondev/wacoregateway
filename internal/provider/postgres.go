@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/faisolarifin/wacoregateway/util"
+	"wacoregateway/util"
+
 	_ "github.com/lib/pq"
 )
 

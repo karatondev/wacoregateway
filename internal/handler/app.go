@@ -1,9 +1,10 @@
-package api
+package handler
 
 import (
-	proto "github.com/faisolarifin/wacoregateway/model/pb"
-	"github.com/faisolarifin/wacoregateway/provider"
-	"github.com/faisolarifin/wacoregateway/service"
+	"wacoregateway/internal/provider"
+	"wacoregateway/internal/service"
+	proto "wacoregateway/model/pb"
+
 	"github.com/go-playground/validator/v10"
 	"go.mau.fi/whatsmeow/store/sqlstore"
 	"google.golang.org/grpc"
