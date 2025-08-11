@@ -5,7 +5,10 @@ import (
 
 	"wacoregateway/internal/cache"
 	"wacoregateway/internal/provider"
+	"wacoregateway/internal/provider/messaging"
+	"wacoregateway/model"
 	proto "wacoregateway/model/pb"
+	"wacoregateway/util"
 
 	"go.mau.fi/whatsmeow"
 	"go.mau.fi/whatsmeow/store/sqlstore"
@@ -31,7 +34,7 @@ func (s *service) LoadClients(ctx context.Context, container *sqlstore.Container
 			s.logger.Errorfctx(provider.AppLog, ctx, false, "failed to connect device %s: %v", dev.ID.String(), err)
 			continue
 		}
-		AttachAllHandlers(dev.ID.String(), s.publisher, client)
+		AttachAllHandlers(dev.ID.String(), s.publisher, s.logger, client)
 		cache.SetClient(dev.ID.String(), client)
 	}
 
@@ -46,11 +49,12 @@ func (s *service) ConnectDevice(ctx context.Context, container *sqlstore.Contain
 	device := container.NewDevice()
 
 	client := whatsmeow.NewClient(device, clientLog)
-	AttachAllHandlers(jid.String(), s.publisher, client)
+	AttachAllHandlers(jid.String(), s.publisher, s.logger, client)
 
 	cache.SetClient(jid.String(), client)
 
 	if client.Store.ID == nil {
+		eventBuilder := model.NewEventBuilder(jid.String())
 		qrChan, _ := client.GetQRChannel(context.Background())
 		go func() {
 			_ = client.Connect()
@@ -58,10 +62,18 @@ func (s *service) ConnectDevice(ctx context.Context, container *sqlstore.Contain
 
 		for evt := range qrChan {
 			if evt.Event == whatsmeow.QRChannelEventCode {
+				// Emit to websocket
 				if err := stream.Send(&proto.EventResponse{
 					Qr: evt.Code,
 				}); err != nil {
 					return err
+				}
+
+				// Publish to queue
+				queueEvent := eventBuilder.CreateQREvent(evt.Code)
+				err := s.publisher.Publish(ctx, util.Configuration.Queues.EventHandlerQueue, queueEvent, func(options *messaging.AMQPPublisherOptions) {})
+				if err != nil {
+					s.logger.Errorfctx(provider.AppLog, ctx, false, "Failed to publish QR event to queue: %v", err)
 				}
 			}
 		}

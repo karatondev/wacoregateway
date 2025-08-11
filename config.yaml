@@ -31,4 +31,7 @@ amqp:
   prefetch_count: 10
   prefetch_size: 0
   global: false
-  wacoregateway_queue: "wacoregateway.events"
+
+queues:
+  event_handler_queue: "event_handler.events"
+  qr_handler_queue: "qr_handler.events"

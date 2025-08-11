@@ -1,30 +1,32 @@
-{"fields":{"uniqueId":"afcd0b2d-075d-4091-810d-a8553681c168"},"level":"INFO","message":"Application started","timestamp":"2025-08-06 10:00:18.010"}
-{"fields":{"uniqueId":"bce65355-334a-4cf0-b6ec-a46ec3ec8d25"},"level":"INFO","message":"gRPC server listening on :50051","timestamp":"2025-08-06 10:00:18.017"}
-{"fields":{"uniqueId":"ceef1ce3-3b6a-430c-a3b8-fcc8483d0536"},"level":"INFO","message":"Receiving signal: interrupt","timestamp":"2025-08-06 10:01:48.448"}
-{"fields":{"uniqueId":"5a626aa5-8a6f-4479-9f10-dd6ac1a4bf54"},"level":"INFO","message":"Successfully stop Application.","timestamp":"2025-08-06 10:01:48.449"}
-{"fields":{"uniqueId":"1e2d9e81-7dc2-4875-9a15-2b01bc0a55ff","x-request-id":"MAIN"},"level":"INFO","message":"Application started","timestamp":"2025-08-06 10:02:27.712"}
-{"fields":{"uniqueId":"0fa2a8bd-8d9e-42c9-ba37-1f4be0bb0054"},"level":"INFO","message":"gRPC server listening on :50051","timestamp":"2025-08-06 10:02:27.716"}
-{"fields":{"uniqueId":"f46b8e2c-8eac-4b71-8ace-5f7e07f1aace"},"level":"INFO","message":"Receiving signal: interrupt","timestamp":"2025-08-06 10:08:05.036"}
-{"fields":{"uniqueId":"e8fbb4cd-d854-4638-ab60-9f10c125fb46"},"level":"INFO","message":"Successfully stop Application.","timestamp":"2025-08-06 10:08:05.036"}
-{"fields":{"uniqueId":"f04cbdca-f2ad-4d9d-856b-6fd580ddd508","x-request-id":"MAIN"},"level":"INFO","message":"Application started","timestamp":"2025-08-06 10:08:13.363"}
-{"fields":{"uniqueId":"9826d57e-d5b5-4c26-8a9e-c56dc2a6a206","x-request-id":"MAIN"},"level":"INFO","message":"gRPC server listening on :50051","timestamp":"2025-08-06 10:08:13.373"}
-{"fields":{"uniqueId":"74b61818-39d7-45a0-8d6c-fc544b1e7a73","x-request-id":"MAIN"},"level":"INFO","message":"Application started","timestamp":"2025-08-06 10:13:59.973"}
-{"fields":{"uniqueId":"f9375329-f6ec-4e74-b453-e1cbcdf21c49","x-request-id":"MAIN"},"level":"INFO","message":"gRPC server listening on :50051","timestamp":"2025-08-06 10:13:59.977"}
-{"fields":{"uniqueId":"9467b1dc-d8ed-4b0b-a409-8e292ccc350e","x-request-id":"MAIN"},"level":"INFO","message":"Application started","timestamp":"2025-08-06 10:15:07.850"}
-{"fields":{"uniqueId":"2307d2b6-7e01-459d-91ad-fadc9100333f","x-request-id":"MAIN"},"level":"INFO","message":"gRPC server listening on :50051","timestamp":"2025-08-06 10:15:07.856"}
-{"fields":{"uniqueId":"a9764bc8-07a7-4f6c-8438-532455c86e8e","x-request-id":"MAIN"},"level":"INFO","message":"Application started","timestamp":"2025-08-06 10:20:42.400"}
-{"fields":{"uniqueId":"3856fa8c-50eb-44d4-bda2-745138d64b4f","x-request-id":"MAIN"},"level":"INFO","message":"gRPC server listening on :50051","timestamp":"2025-08-06 10:20:42.456"}
-{"fields":{"uniqueId":"13b19378-7ead-4279-84c6-0c7f5306e3f0","x-request-id":"MAIN"},"level":"INFO","message":"Receiving signal: interrupt","timestamp":"2025-08-06 10:21:11.815"}
-{"fields":{"uniqueId":"a9bc36df-f3d6-452b-892e-c0674ddf7170","x-request-id":"MAIN"},"level":"INFO","message":"Successfully stop Application.","timestamp":"2025-08-06 10:21:11.815"}
-{"fields":{"uniqueId":"d112b207-de8d-436a-8273-fc2f66c67be9","x-request-id":"MAIN"},"level":"INFO","message":"Application started","timestamp":"2025-08-06 10:21:54.040"}
-{"fields":{"uniqueId":"a66b1f0c-9898-4707-a053-67812c366c70","x-request-id":"MAIN"},"level":"INFO","message":"gRPC server listening on :50051","timestamp":"2025-08-06 10:21:54.703"}
-{"fields":{"uniqueId":"027bbd52-7d14-4793-9814-cc53d60e8c47","x-request-id":"MAIN"},"level":"INFO","message":"Application started","timestamp":"2025-08-06 10:22:26.559"}
-{"fields":{"uniqueId":"a1cb3fe3-59c2-4c14-b315-11682c672aaa","x-request-id":"MAIN"},"level":"INFO","message":"gRPC server listening on :50051","timestamp":"2025-08-06 10:22:27.190"}
-{"fields":{"uniqueId":"9d89b5ab-829c-4498-a02e-2e55f71f1840","x-request-id":"MAIN"},"level":"INFO","message":"Receiving signal: interrupt","timestamp":"2025-08-06 10:24:41.642"}
-{"fields":{"uniqueId":"b814108b-fb4f-4d47-8cd7-d321cc9091be","x-request-id":"MAIN"},"level":"INFO","message":"Successfully stop Application.","timestamp":"2025-08-06 10:24:41.642"}
-{"fields":{"uniqueId":"d0f80a05-bf16-4ad7-92d9-a4a953df2d88","x-request-id":"MAIN"},"level":"INFO","message":"Application started","timestamp":"2025-08-06 10:25:08.247"}
-{"fields":{"uniqueId":"e0487b6c-0f85-4daa-b18e-2d52fe49f51c","x-request-id":"MAIN"},"level":"INFO","message":"gRPC server listening on :50051","timestamp":"2025-08-06 10:25:09.227"}
-{"fields":{"uniqueId":"55dad1a6-5e15-4387-bf10-6427d65d9e5b","x-request-id":"MAIN"},"level":"INFO","message":"Application started","timestamp":"2025-08-06 10:30:07.835"}
-{"fields":{"uniqueId":"8acde5a9-509d-4d46-b349-ae63e4cbfd8a","x-request-id":"MAIN"},"level":"INFO","message":"gRPC server listening on :50051","timestamp":"2025-08-06 10:30:08.673"}
-{"fields":{"uniqueId":"c331cb9d-6fc7-4fe6-a462-c1e8f7a46803","x-request-id":"MAIN"},"level":"INFO","message":"Receiving signal: interrupt","timestamp":"2025-08-06 10:30:23.244"}
-{"fields":{"uniqueId":"605fc6a8-830f-4994-8b14-943d2839ad9a","x-request-id":"MAIN"},"level":"INFO","message":"Successfully stop Application.","timestamp":"2025-08-06 10:30:23.245"}
+2025-08-11 09:28:44.788 - INFO - MAIN - Application started
+2025-08-11 09:28:45.596 - INFO - MAIN - gRPC server listening on :50051
+2025-08-11 09:28:47.091 - INFO -  - [6289513689096:40@s.whatsapp.net] Connected
+2025-08-11 09:31:27.116 - INFO - MAIN - Receiving signal: interrupt
+2025-08-11 09:31:27.117 - INFO - MAIN - Successfully stop Application.
+2025-08-11 09:31:35.549 - INFO - MAIN - Application started
+2025-08-11 09:31:36.355 - INFO - MAIN - gRPC server listening on :50051
+2025-08-11 09:31:37.559 - INFO -  - [6289513689096:40@s.whatsapp.net] Connected
+2025-08-11 09:33:16.291 - INFO -  - [officia cupidatat@s.whatsapp.net] QR: [2@WC7XPw3zQh77JGtQ1rLP9HZ+dUXr77D82MWhChjDBgJXv81iSOurdZXLLA3ssvLgt5R01Wb+pv2N4toYJqXzn+9+xm8KaQquHxM=,fJ0pI+Sci/Tw/JOr0doo9ppU683gfUuZ+uyMGlsV7UE=,5dKGvtkeFljf5aBE0JcqNBNyGTftu1cC3TRTFkLaajk=,NimU6/5w8vJez1Plm9PtdGl1YerZkAYs46L6g2wpy5Q= 2@Lm5DjkhwpCiK7FdCi1961W5obOD8QIo2AYQU2Ztkf9kifLjfYrboLEHIj74HSvf0sOoJwdP1kqqeAWGCNnzBu0vDQ8AQO6PBrr0=,fJ0pI+Sci/Tw/JOr0doo9ppU683gfUuZ+uyMGlsV7UE=,5dKGvtkeFljf5aBE0JcqNBNyGTftu1cC3TRTFkLaajk=,NimU6/5w8vJez1Plm9PtdGl1YerZkAYs46L6g2wpy5Q= 2@lGEhYkuB6nlyFQFBIP9rxcUXa+7l0GOCHFfOzeVmG92WocU4C3XfVH6dn1bbo0qj2ZgxhEzWO3mawkcPmWKvURyqPffZl14UwZE=,fJ0pI+Sci/Tw/JOr0doo9ppU683gfUuZ+uyMGlsV7UE=,5dKGvtkeFljf5aBE0JcqNBNyGTftu1cC3TRTFkLaajk=,NimU6/5w8vJez1Plm9PtdGl1YerZkAYs46L6g2wpy5Q= 2@1efERLpWciBl0I801Q1lSQ7bIZRdRYw5wECbS7GqYUfSywqJNvl+gOAW5zaN2x/yx2skNL+iGe8Xs+Q8fMfOeitR02N1BlRFx3o=,fJ0pI+Sci/Tw/JOr0doo9ppU683gfUuZ+uyMGlsV7UE=,5dKGvtkeFljf5aBE0JcqNBNyGTftu1cC3TRTFkLaajk=,NimU6/5w8vJez1Plm9PtdGl1YerZkAYs46L6g2wpy5Q= 2@MB+05TnDHI1qoBlOd66yLOwf/q8iQJp4DxK/BQVOLjsJ/K/YWTHvT2CDQETi5XbdlCyls507SXw53nsIvcYHFCcvDGC1PBEWOhM=,fJ0pI+Sci/Tw/JOr0doo9ppU683gfUuZ+uyMGlsV7UE=,5dKGvtkeFljf5aBE0JcqNBNyGTftu1cC3TRTFkLaajk=,NimU6/5w8vJez1Plm9PtdGl1YerZkAYs46L6g2wpy5Q= 2@lmTHOoLE0GN+VIQFer+xopdff8YfSQV0LRmjZiXjgf9BqxZWR663KLEYPkFvUzI6sMysp9m4JtItAOO7UX0CQw77lmUSznISkCs=,fJ0pI+Sci/Tw/JOr0doo9ppU683gfUuZ+uyMGlsV7UE=,5dKGvtkeFljf5aBE0JcqNBNyGTftu1cC3TRTFkLaajk=,NimU6/5w8vJez1Plm9PtdGl1YerZkAYs46L6g2wpy5Q=]
+2025-08-11 09:38:21.910 - INFO - MAIN - Receiving signal: interrupt
+2025-08-11 09:38:21.911 - INFO - MAIN - Successfully stop Application.
+2025-08-11 09:38:30.279 - INFO - MAIN - Application started
+2025-08-11 09:38:31.080 - INFO - MAIN - gRPC server listening on :50051
+2025-08-11 09:38:32.506 - INFO -  - [6289513689096:40@s.whatsapp.net] Connected
+2025-08-11 09:39:46.530 - INFO -  - [officia cupidatat@s.whatsapp.net] QR: [2@3p3qghofL0wnCY4e/J8C2KFgBxDQzkp6lr+LK/U/lQgOOOYPrWE2xICXRSQUcaqkhcKsVhJbEmZr7lOpoA8zdGtTVQYTyDq9zh4=,5c6Dpryv4zUIoC4xy8XPLhrTJN3Eo+UD/JVso6W3YA0=,TImgCBHxuXVJW/C4S9TZnZAskVcF12zNlkX4bFYIyQQ=,c4ajUPUxSua+Q7BR+BYfJxdyuTZcWeJ7MMg16fdPH24= 2@JBqNlhn9XjWstTrySWNOoQuTG5LTb7wP9FRoRAPyhFjpFqwNh5ejDhlL0IfspmKL5IkBwwh3TEs5NIKp0sSYWJLcM/81GovHqGc=,5c6Dpryv4zUIoC4xy8XPLhrTJN3Eo+UD/JVso6W3YA0=,TImgCBHxuXVJW/C4S9TZnZAskVcF12zNlkX4bFYIyQQ=,c4ajUPUxSua+Q7BR+BYfJxdyuTZcWeJ7MMg16fdPH24= 2@s5gW5Osu2T+WAPzl/i9qyhyjdIKD1cGXadjw2czXumxtZiRJDhRMJVUf0QRk01RW7XAr2beV5sqErvUUB+B55qjo2CRm0x2a2s4=,5c6Dpryv4zUIoC4xy8XPLhrTJN3Eo+UD/JVso6W3YA0=,TImgCBHxuXVJW/C4S9TZnZAskVcF12zNlkX4bFYIyQQ=,c4ajUPUxSua+Q7BR+BYfJxdyuTZcWeJ7MMg16fdPH24= 2@Cn6ADtREwS2zz4ocgCSih67FN1Bu0EVlPpavsbWIvMfE3I0cKdPSM2xcYULynoDFCeLMz9p/5il+6lANfpsJZXPmvoqTH5IENHo=,5c6Dpryv4zUIoC4xy8XPLhrTJN3Eo+UD/JVso6W3YA0=,TImgCBHxuXVJW/C4S9TZnZAskVcF12zNlkX4bFYIyQQ=,c4ajUPUxSua+Q7BR+BYfJxdyuTZcWeJ7MMg16fdPH24= 2@JGoPIEGgmkkotTdGQvxxVzy7q9H+D2Z+oxfYh9FmfodvhmmKOTw/JqAoM3eXbKJeVJ/06pcVd6FHg12cE86Fze3xCQ6fME1mzZs=,5c6Dpryv4zUIoC4xy8XPLhrTJN3Eo+UD/JVso6W3YA0=,TImgCBHxuXVJW/C4S9TZnZAskVcF12zNlkX4bFYIyQQ=,c4ajUPUxSua+Q7BR+BYfJxdyuTZcWeJ7MMg16fdPH24= 2@QdH4ExV1YQJu5Y5aURsb0gQR4noGq9oIXx4pGQT3s85Yhsi2dJTp9j3PwLRu4CkCbpIE+65AiYmASZ4FOSFZwrGHrB6qzcRns5g=,5c6Dpryv4zUIoC4xy8XPLhrTJN3Eo+UD/JVso6W3YA0=,TImgCBHxuXVJW/C4S9TZnZAskVcF12zNlkX4bFYIyQQ=,c4ajUPUxSua+Q7BR+BYfJxdyuTZcWeJ7MMg16fdPH24=]
+2025-08-11 09:46:10.941 - INFO -  - Receipt for message ID [3EB0EE66BC94E2A70C9EDE] from 6282335685138@s.whatsapp.net
+2025-08-11 09:46:12.329 - INFO -  - Receipt for message ID [3EB0EE66BC94E2A70C9EDE] from 6282335685138:35@s.whatsapp.net
+2025-08-11 09:47:37.667 - INFO -  - Receipt for message ID [3EB0EE66BC94E2A70C9EDE] from 6282335685138@s.whatsapp.net
+2025-08-11 09:47:40.284 - INFO -  - New message from 6282335685138@s.whatsapp.net: oke
+2025-08-11 09:47:40.284 - DEBUG -  - Text: oke
+2025-08-11 09:47:44.921 - INFO -  - Receipt for message ID [3EB0EE66BC94E2A70C9EDE] from 6289513689096@s.whatsapp.net
+2025-08-11 09:49:18.962 - INFO -  - New message from 6282335685138@s.whatsapp.net: 
+2025-08-11 09:49:18.963 - DEBUG -  - Image with caption: 
+2025-08-11 09:50:00.186 - INFO -  - Receipt for message ID [3EB0EE66BC94E2A70C9EDE] from 6282335685138:35@s.whatsapp.net
+2025-08-11 09:50:05.044 - INFO -  - New message from 6282335685138@s.whatsapp.net: ini
+2025-08-11 09:50:05.044 - DEBUG -  - Text: ini
+2025-08-11 09:50:30.785 - INFO -  - Receipt for message ID [3A2DCFA072D4CD242D70 3A57B6779CB9E8FD6311 3A52411316F8F27EFF10 26BB01ED57848BD4BCEC7C1DEBEE5D95] from 6289513689096@s.whatsapp.net
+2025-08-11 10:39:49.943 - INFO -  - Receipt for message ID [3EB0EE66BC94E2A70C9EDE] from 6282335685138:34@s.whatsapp.net
+2025-08-11 10:42:09.773 - INFO -  - [6289513689096:40@s.whatsapp.net] Disconnected: &{}
+2025-08-11 10:42:30.243 - INFO -  - [6289513689096:40@s.whatsapp.net] Connected
+2025-08-11 11:09:26.725 - INFO - MAIN - Receiving signal: interrupt
+2025-08-11 11:09:26.726 - INFO - MAIN - Successfully stop Application.

@@ -2,112 +2,175 @@ package service
 
 import (
 	"context"
-	"fmt"
 
+	"wacoregateway/internal/provider"
 	"wacoregateway/internal/provider/messaging"
+	"wacoregateway/model"
 	"wacoregateway/util"
 
-	"github.com/sirupsen/logrus"
 	"go.mau.fi/whatsmeow"
 	"go.mau.fi/whatsmeow/types/events"
 )
 
-func AttachAllHandlers(deviceID string, publisher messaging.AMQPPublisherInterface, client *whatsmeow.Client) {
+func AttachAllHandlers(deviceID string, publisher messaging.AMQPPublisherInterface, logger provider.ILogger, client *whatsmeow.Client) {
+	eventBuilder := model.NewEventBuilder(deviceID)
+	ctx := context.Background()
+
 	client.AddEventHandler(func(evt interface{}) {
-		HandleConnectionEvents(deviceID, evt)
-		HandleMessageEvents(deviceID, publisher, evt)
-		HandleQREvents(deviceID, evt)
-		HandleAnyEvents(deviceID, evt)
+		HandleConnectionEvents(deviceID, publisher, logger, eventBuilder, ctx, evt)
+		HandleMessageEvents(deviceID, publisher, logger, eventBuilder, ctx, evt)
+		HandleQREvents(deviceID, publisher, logger, eventBuilder, ctx, evt)
+		HandleAnyEvents(deviceID, publisher, logger, eventBuilder, ctx, evt)
 	})
 }
 
-func HandleQREvents(deviceID string, evt interface{}) {
+func HandleQREvents(deviceID string, publisher messaging.AMQPPublisherInterface, logger provider.ILogger, eventBuilder *model.EventBuilder, ctx context.Context, evt interface{}) {
 	switch v := evt.(type) {
 	case *events.QR:
-		logrus.Infof("[%s] QR: %s", deviceID, v.Codes)
+		logger.Infofctx(provider.AppLog, ctx, "[%s] QR: %v", deviceID, v.Codes)
+
+		// Create and publish QR event
+		queueEvent := eventBuilder.CreateQREvent(v.Codes[0])
+		err := publisher.Publish(ctx, util.Configuration.Queues.QRHandlerQueue, queueEvent, func(options *messaging.AMQPPublisherOptions) {})
+		if err != nil {
+			logger.Errorfctx(provider.AppLog, ctx, false, "Failed to publish QR event: %v", err)
+		}
 
 	case *events.Receipt:
-		fmt.Println("Receipt for message ID %s from %s ",
-			v.MessageIDs, v.Sender.String())
+		logger.Infofctx(provider.AppLog, ctx, "Receipt for message ID %v from %s", v.MessageIDs, v.Sender.String())
+
+		// Create and publish receipt event
+		queueEvent := eventBuilder.CreateReceiptEvent(v.MessageIDs, v.Sender.String(), v.Timestamp.Unix())
+		err := publisher.Publish(ctx, util.Configuration.Queues.EventHandlerQueue, queueEvent, func(options *messaging.AMQPPublisherOptions) {})
+		if err != nil {
+			logger.Errorfctx(provider.AppLog, ctx, false, "Failed to publish receipt event: %v", err)
+		}
 	}
 }
 
-func HandleConnectionEvents(deviceID string, evt interface{}) {
+func HandleConnectionEvents(deviceID string, publisher messaging.AMQPPublisherInterface, logger provider.ILogger, eventBuilder *model.EventBuilder, ctx context.Context, evt interface{}) {
 	switch v := evt.(type) {
 	case *events.Connected:
-		logrus.Infof("[%s] Connected", deviceID)
+		logger.Infofctx(provider.AppLog, ctx, "[%s] Connected", deviceID)
+
+		// Create and publish connected event
+		queueEvent := eventBuilder.CreateConnectedEvent()
+		err := publisher.Publish(ctx, util.Configuration.Queues.EventHandlerQueue, queueEvent, func(options *messaging.AMQPPublisherOptions) {})
+		if err != nil {
+			logger.Errorfctx(provider.AppLog, ctx, false, "Failed to publish connected event: %v", err)
+		}
+
 	case *events.Disconnected:
-		logrus.Warnf("[%s] Disconnected: %v", deviceID, v)
+		logger.Infofctx(provider.AppLog, ctx, "[%s] Disconnected: %v", deviceID, v)
+
+		// Create and publish disconnected event
+		queueEvent := eventBuilder.CreateDisconnectedEvent("disconnected")
+		err := publisher.Publish(ctx, util.Configuration.Queues.EventHandlerQueue, queueEvent, func(options *messaging.AMQPPublisherOptions) {})
+		if err != nil {
+			logger.Errorfctx(provider.AppLog, ctx, false, "Failed to publish disconnected event: %v", err)
+		}
+
 	case *events.LoggedOut:
-		logrus.Warnf("[%s] Logged out", deviceID)
+		logger.Infofctx(provider.AppLog, ctx, "[%s] Logged out", deviceID)
+
+		// Create and publish logged out event
+		queueEvent := eventBuilder.CreateLoggedOutEvent()
+		err := publisher.Publish(ctx, util.Configuration.Queues.EventHandlerQueue, queueEvent, func(options *messaging.AMQPPublisherOptions) {})
+		if err != nil {
+			logger.Errorfctx(provider.AppLog, ctx, false, "Failed to publish logged out event: %v", err)
+		}
 	}
 }
 
-func HandleMessageEvents(deviceID string, publisher messaging.AMQPPublisherInterface, evt interface{}) {
+func HandleMessageEvents(deviceID string, publisher messaging.AMQPPublisherInterface, logger provider.ILogger, eventBuilder *model.EventBuilder, ctx context.Context, evt interface{}) {
 	switch v := evt.(type) {
 	case *events.Message:
 		sender := v.Info.Sender.String()
 		content := v.Message.GetConversation()
 
-		rawData := map[string]interface{}{
-			"deviceID": deviceID,
-			"sender":   sender,
-			"content":  content,
-			"metadata": map[string]interface{}{},
-		}
+		// Use the generic message event creator which handles all message types
+		queueEvent := eventBuilder.CreateGenericMessageEvent(v)
 
-		err := publisher.Publish(context.Background(), util.Configuration.AMQP.WaCoreGatewayQueue, rawData, func(options *messaging.AMQPPublisherOptions) {})
+		err := publisher.Publish(ctx, util.Configuration.Queues.EventHandlerQueue, queueEvent, func(options *messaging.AMQPPublisherOptions) {})
 		if err != nil {
-			fmt.Println("Failed to publish message: %v", err)
+			logger.Errorfctx(provider.AppLog, ctx, false, "Failed to publish message event: %v", err)
 		}
 
-		fmt.Println("New message from %s: %s\n", sender, content)
+		logger.Infofctx(provider.AppLog, ctx, "New message from %s: %s", sender, content)
 
 		msg := v.Message
 		switch {
 		case msg.GetConversation() != "":
-			fmt.Println("Text: %s", msg.GetConversation())
+			logger.Debugfctx(provider.AppLog, ctx, "Text: %s", msg.GetConversation())
 
 		case msg.GetImageMessage() != nil:
-			fmt.Println("Image with caption: %s", msg.GetImageMessage().GetCaption())
+			logger.Debugfctx(provider.AppLog, ctx, "Image with caption: %s", msg.GetImageMessage().GetCaption())
 
 		case msg.GetAudioMessage() != nil:
-			fmt.Println("Voice note duration: %d", msg.GetAudioMessage().GetSeconds())
+			logger.Debugfctx(provider.AppLog, ctx, "Voice note duration: %d", msg.GetAudioMessage().GetSeconds())
 
 		case msg.GetDocumentMessage() != nil:
-			fmt.Println("Document: %s", msg.GetDocumentMessage().GetFileName())
+			logger.Debugfctx(provider.AppLog, ctx, "Document: %s", msg.GetDocumentMessage().GetFileName())
 
 		case msg.GetVideoMessage() != nil:
-			fmt.Println("Video with caption: %s", msg.GetVideoMessage().GetCaption())
+			logger.Debugfctx(provider.AppLog, ctx, "Video with caption: %s", msg.GetVideoMessage().GetCaption())
 
 		case msg.GetButtonsResponseMessage() != nil:
-			fmt.Println("Button clicked: %s", msg.GetButtonsResponseMessage().SelectedButtonID)
+			logger.Debugfctx(provider.AppLog, ctx, "Button clicked: %s", msg.GetButtonsResponseMessage().GetSelectedButtonID())
 
 		case msg.GetListResponseMessage() != nil:
-			fmt.Println("List selected: %s", msg.GetListResponseMessage().GetTitle())
+			logger.Debugfctx(provider.AppLog, ctx, "List selected: %s", msg.GetListResponseMessage().GetTitle())
 
 		case msg.GetLocationMessage() != nil:
 			loc := msg.GetLocationMessage()
-			fmt.Println("Location shared: %f,%f", loc.GetDegreesLatitude(), loc.GetDegreesLongitude())
+			logger.Debugfctx(provider.AppLog, ctx, "Location shared: %f,%f", loc.GetDegreesLatitude(), loc.GetDegreesLongitude())
 
 		case msg.GetReactionMessage() != nil:
-			fmt.Println("Reacted with: %s", msg.GetReactionMessage().GetText())
+			logger.Debugfctx(provider.AppLog, ctx, "Reacted with: %s", msg.GetReactionMessage().GetText())
 		}
 	}
 }
 
-func HandleAnyEvents(deviceID string, evt interface{}) {
+func HandleAnyEvents(deviceID string, publisher messaging.AMQPPublisherInterface, logger provider.ILogger, eventBuilder *model.EventBuilder, ctx context.Context, evt interface{}) {
 	switch v := evt.(type) {
 	case *events.PairSuccess:
-		logrus.Infof("[%s] Paired with %s", deviceID)
+		logger.Infofctx(provider.AppLog, ctx, "[%s] Paired with device", deviceID)
+
+		// Create and publish pair success event
+		queueEvent := eventBuilder.CreatePairSuccessEvent("", "")
+		err := publisher.Publish(ctx, util.Configuration.Queues.EventHandlerQueue, queueEvent, func(options *messaging.AMQPPublisherOptions) {})
+		if err != nil {
+			logger.Errorfctx(provider.AppLog, ctx, false, "Failed to publish pair success event: %v", err)
+		}
 
 	case *events.MediaRetryError:
-		fmt.Println("Ack for message %s - status: %s")
+		logger.Infofctx(provider.AppLog, ctx, "Media retry error")
+
+		// Create and publish media retry error event
+		queueEvent := eventBuilder.CreateMediaRetryErrorEvent("", "media retry error")
+		err := publisher.Publish(ctx, util.Configuration.Queues.EventHandlerQueue, queueEvent, func(options *messaging.AMQPPublisherOptions) {})
+		if err != nil {
+			logger.Errorfctx(provider.AppLog, ctx, false, "Failed to publish media retry error event: %v", err)
+		}
 
 	case *events.Presence:
-		fmt.Println("Presence %s:", v.From.String())
+		logger.Debugfctx(provider.AppLog, ctx, "Presence %s", v.From.String())
+
+		// Create and publish presence event
+		queueEvent := eventBuilder.CreatePresenceEvent(v.From.String(), "", v.LastSeen.Unix())
+		err := publisher.Publish(ctx, util.Configuration.Queues.EventHandlerQueue, queueEvent, func(options *messaging.AMQPPublisherOptions) {})
+		if err != nil {
+			logger.Errorfctx(provider.AppLog, ctx, false, "Failed to publish presence event: %v", err)
+		}
 
 	case *events.CallOffer:
-		fmt.Println("Call offer from")
+		logger.Infofctx(provider.AppLog, ctx, "Call offer received")
+
+		// Create and publish call offer event
+		queueEvent := eventBuilder.CreateCallOfferEvent(v.CallCreator.String(), v.CallID, 0)
+		err := publisher.Publish(ctx, util.Configuration.Queues.EventHandlerQueue, queueEvent, func(options *messaging.AMQPPublisherOptions) {})
+		if err != nil {
+			logger.Errorfctx(provider.AppLog, ctx, false, "Failed to publish call offer event: %v", err)
+		}
 	}
 }

@@ -1,2 +1,0 @@
-{"fields":{"uniqueId":"4b4784f3-d995-4224-864f-68d418d3b92c","x-request-id":"MAIN"},"level":"ERROR","message":"Failed to get device store: failed to query sessions: pq: relation \"whatsmeow_device\" does not exist","timestamp":"2025-08-06 10:20:42.451"}
-{"fields":{"uniqueId":"557122c8-d05d-424c-bc0f-046645b0f6db","x-request-id":"MAIN"},"level":"ERROR","message":"Failed to load new clients: failed to query sessions: pq: relation \"whatsmeow_device\" does not exist","timestamp":"2025-08-06 10:20:42.453"}
