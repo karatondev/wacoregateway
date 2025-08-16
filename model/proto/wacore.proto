@@ -1,0 +1,117 @@
+syntax = "proto3";
+
+option go_package = "model/pb";
+package wacoreproto;
+
+import "google/protobuf/empty.proto";
+
+service WaCoreGateway {
+  rpc GetClientContact (ClientdataRequest) returns (ContactListResponse) {}
+  rpc GetClientGroup (ClientdataRequest) returns (GroupListResponse) {}
+  rpc GetAllDevice (google.protobuf.Empty) returns (DeviceListResponse) {}
+  rpc SendMessage (MessagePayload) returns (MessageResponse) {}
+  rpc StreamConnectDevice(ConnectDeviceRequest) returns (stream EventResponse);
+}
+
+message ClientdataRequest {
+  string sender_jid = 1;
+}
+
+message ClientdataItem {
+  string jid = 1;
+  string name = 2;
+  string short = 3;
+}
+
+message ContactListResponse {
+  repeated ClientdataItem contacts = 1;
+}
+
+message GroupListResponse {
+  repeated ClientdataItem groups = 1;
+}
+
+message DeviceItem {
+  string jid = 1;
+}
+
+message DeviceListResponse {
+  repeated DeviceItem devices = 1;
+}
+
+message ConnectDeviceRequest {
+  string name = 1;
+}
+
+message EventResponse {
+  string qr = 1;
+}
+
+
+message MessagePayload {
+  string sender_jid = 1;
+  string to = 2;
+  string type = 3;
+  string text = 4;
+
+  Media image = 5;
+  Media video = 6;
+
+  Audio audio = 7;
+  Document document = 8;
+
+  Location location = 9;
+  Contact vcard = 10;
+  Contacts contacts = 11;
+
+  LiveLocation live_location = 12;
+}
+
+message MessageResponse {
+  string id = 1;
+}
+
+// ==== Tipe media umum ====
+
+message Media {
+  string url = 1;
+  string caption = 2;
+  string mimetype = 3;
+}
+
+message Audio {
+  string url = 1;
+  string mime_type = 2;
+  bool ptt = 3; // push-to-talk (true = voice note)
+}
+
+message Document {
+  string url = 1;
+  string filename = 2;
+  string mimetype = 3;
+  string title = 4;
+}
+
+// ==== Lokasi dan kontak ====
+
+message Location {
+  double latitude = 1;
+  double longitude = 2;
+  string name = 3;
+  string address = 4;
+}
+
+message LiveLocation {
+  double latitude = 1;
+  double longitude = 2;
+  uint32 duration = 3; // dalam detik
+}
+
+message Contact {
+  string name = 1;
+  string phone = 2;
+}
+
+message Contacts {
+  repeated Contact list = 1;
+}
