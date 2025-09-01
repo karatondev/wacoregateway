@@ -43,8 +43,9 @@ type Config struct {
 		Global        bool   `mapstructure:"global"`
 	} `mapstructure:"amqp"`
 	Queues struct {
-		EventHandlerQueue string `mapstructure:"event_handler_queue"`
-		QRHandlerQueue    string `mapstructure:"qr_handler_queue"`
+		EventHandlerQueue  string `mapstructure:"event_handler_queue"`
+		MessagesEventQueue string `mapstructure:"messages_event_queue"`
+		QRHandlerQueue     string `mapstructure:"qr_handler_queue"`
 	} `mapstructure:"queues"`
 }
 

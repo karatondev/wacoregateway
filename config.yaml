@@ -34,4 +34,5 @@ amqp:
 
 queues:
   event_handler_queue: "event_handler.events"
+  messages_event_queue: "message.events"
   qr_handler_queue: "qr_handler.events"

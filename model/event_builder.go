@@ -2,20 +2,24 @@ package model
 
 import (
 	"time"
+	"wacoregateway/internal/cache"
 
 	"github.com/google/uuid"
+	"go.mau.fi/whatsmeow"
 	"go.mau.fi/whatsmeow/types/events"
 )
 
 // EventBuilder helps create QueueEvent instances for different event types
 type EventBuilder struct {
-	deviceID string
+	SenderJID string
+	client    *whatsmeow.Client
 }
 
 // NewEventBuilder creates a new EventBuilder instance
-func NewEventBuilder(deviceID string) *EventBuilder {
+func NewEventBuilder(SenderJID string, client *whatsmeow.Client) *EventBuilder {
 	return &EventBuilder{
-		deviceID: deviceID,
+		SenderJID: SenderJID,
+		client:    client,
 	}
 }
 
@@ -23,7 +27,7 @@ func NewEventBuilder(deviceID string) *EventBuilder {
 func (eb *EventBuilder) CreateConnectedEvent() *QueueEvent {
 	return &QueueEvent{
 		EventID:   uuid.New().String(),
-		DeviceID:  eb.deviceID,
+		SenderJID: eb.SenderJID,
 		EventType: EventTypeConnected,
 		Timestamp: time.Now(),
 		Data: ConnectionEventData{
@@ -36,7 +40,7 @@ func (eb *EventBuilder) CreateConnectedEvent() *QueueEvent {
 func (eb *EventBuilder) CreateDisconnectedEvent(reason string) *QueueEvent {
 	return &QueueEvent{
 		EventID:   uuid.New().String(),
-		DeviceID:  eb.deviceID,
+		SenderJID: eb.SenderJID,
 		EventType: EventTypeDisconnected,
 		Timestamp: time.Now(),
 		Data: ConnectionEventData{
@@ -50,7 +54,7 @@ func (eb *EventBuilder) CreateDisconnectedEvent(reason string) *QueueEvent {
 func (eb *EventBuilder) CreateLoggedOutEvent() *QueueEvent {
 	return &QueueEvent{
 		EventID:   uuid.New().String(),
-		DeviceID:  eb.deviceID,
+		SenderJID: eb.SenderJID,
 		EventType: EventTypeLoggedOut,
 		Timestamp: time.Now(),
 		Data: ConnectionEventData{
@@ -63,7 +67,7 @@ func (eb *EventBuilder) CreateLoggedOutEvent() *QueueEvent {
 func (eb *EventBuilder) CreateQREvent(code string) *QueueEvent {
 	return &QueueEvent{
 		EventID:   uuid.New().String(),
-		DeviceID:  eb.deviceID,
+		SenderJID: eb.SenderJID,
 		EventType: EventTypeQR,
 		Timestamp: time.Now(),
 		Data: QREventData{
@@ -76,7 +80,7 @@ func (eb *EventBuilder) CreateQREvent(code string) *QueueEvent {
 func (eb *EventBuilder) CreateTextMessageEvent(sender, content string) *QueueEvent {
 	return &QueueEvent{
 		EventID:   uuid.New().String(),
-		DeviceID:  eb.deviceID,
+		SenderJID: eb.SenderJID,
 		EventType: EventTypeMessage,
 		Timestamp: time.Now(),
 		Data: MessageEventData{
@@ -92,7 +96,7 @@ func (eb *EventBuilder) CreateTextMessageEvent(sender, content string) *QueueEve
 func (eb *EventBuilder) CreateImageMessageEvent(sender, caption, mimeType string, fileSize uint64) *QueueEvent {
 	return &QueueEvent{
 		EventID:   uuid.New().String(),
-		DeviceID:  eb.deviceID,
+		SenderJID: eb.SenderJID,
 		EventType: EventTypeMessage,
 		Timestamp: time.Now(),
 		Data: ImageMessageData{
@@ -112,7 +116,7 @@ func (eb *EventBuilder) CreateImageMessageEvent(sender, caption, mimeType string
 func (eb *EventBuilder) CreateAudioMessageEvent(sender string, duration uint32, mimeType string, fileSize uint64) *QueueEvent {
 	return &QueueEvent{
 		EventID:   uuid.New().String(),
-		DeviceID:  eb.deviceID,
+		SenderJID: eb.SenderJID,
 		EventType: EventTypeMessage,
 		Timestamp: time.Now(),
 		Data: AudioMessageData{
@@ -132,7 +136,7 @@ func (eb *EventBuilder) CreateAudioMessageEvent(sender string, duration uint32, 
 func (eb *EventBuilder) CreateVideoMessageEvent(sender, caption, mimeType string, duration uint32, fileSize uint64) *QueueEvent {
 	return &QueueEvent{
 		EventID:   uuid.New().String(),
-		DeviceID:  eb.deviceID,
+		SenderJID: eb.SenderJID,
 		EventType: EventTypeMessage,
 		Timestamp: time.Now(),
 		Data: VideoMessageData{
@@ -153,7 +157,7 @@ func (eb *EventBuilder) CreateVideoMessageEvent(sender, caption, mimeType string
 func (eb *EventBuilder) CreateDocumentMessageEvent(sender, fileName, mimeType string, fileSize uint64) *QueueEvent {
 	return &QueueEvent{
 		EventID:   uuid.New().String(),
-		DeviceID:  eb.deviceID,
+		SenderJID: eb.SenderJID,
 		EventType: EventTypeMessage,
 		Timestamp: time.Now(),
 		Data: DocumentMessageData{
@@ -173,7 +177,7 @@ func (eb *EventBuilder) CreateDocumentMessageEvent(sender, fileName, mimeType st
 func (eb *EventBuilder) CreateLocationMessageEvent(sender string, latitude, longitude float64, name, address string) *QueueEvent {
 	return &QueueEvent{
 		EventID:   uuid.New().String(),
-		DeviceID:  eb.deviceID,
+		SenderJID: eb.SenderJID,
 		EventType: EventTypeMessage,
 		Timestamp: time.Now(),
 		Data: LocationMessageData{
@@ -194,7 +198,7 @@ func (eb *EventBuilder) CreateLocationMessageEvent(sender string, latitude, long
 func (eb *EventBuilder) CreateReactionMessageEvent(sender, text, targetKey, targetSender string) *QueueEvent {
 	return &QueueEvent{
 		EventID:   uuid.New().String(),
-		DeviceID:  eb.deviceID,
+		SenderJID: eb.SenderJID,
 		EventType: EventTypeMessage,
 		Timestamp: time.Now(),
 		Data: ReactionMessageData{
@@ -214,7 +218,7 @@ func (eb *EventBuilder) CreateReactionMessageEvent(sender, text, targetKey, targ
 func (eb *EventBuilder) CreateButtonResponseMessageEvent(sender, selectedButtonID, displayText string) *QueueEvent {
 	return &QueueEvent{
 		EventID:   uuid.New().String(),
-		DeviceID:  eb.deviceID,
+		SenderJID: eb.SenderJID,
 		EventType: EventTypeMessage,
 		Timestamp: time.Now(),
 		Data: ButtonResponseMessageData{
@@ -233,7 +237,7 @@ func (eb *EventBuilder) CreateButtonResponseMessageEvent(sender, selectedButtonI
 func (eb *EventBuilder) CreateListResponseMessageEvent(sender, title, description, selectedRowID string) *QueueEvent {
 	return &QueueEvent{
 		EventID:   uuid.New().String(),
-		DeviceID:  eb.deviceID,
+		SenderJID: eb.SenderJID,
 		EventType: EventTypeMessage,
 		Timestamp: time.Now(),
 		Data: ListResponseMessageData{
@@ -253,7 +257,7 @@ func (eb *EventBuilder) CreateListResponseMessageEvent(sender, title, descriptio
 func (eb *EventBuilder) CreateReceiptEvent(messageIDs []string, sender string, timestamp int64) *QueueEvent {
 	return &QueueEvent{
 		EventID:   uuid.New().String(),
-		DeviceID:  eb.deviceID,
+		SenderJID: eb.SenderJID,
 		EventType: EventTypeReceipt,
 		Timestamp: time.Now(),
 		Data: ReceiptEventData{
@@ -268,7 +272,7 @@ func (eb *EventBuilder) CreateReceiptEvent(messageIDs []string, sender string, t
 func (eb *EventBuilder) CreatePresenceEvent(from, status string, timestamp int64) *QueueEvent {
 	return &QueueEvent{
 		EventID:   uuid.New().String(),
-		DeviceID:  eb.deviceID,
+		SenderJID: eb.SenderJID,
 		EventType: EventTypePresence,
 		Timestamp: time.Now(),
 		Data: PresenceEventData{
@@ -283,7 +287,7 @@ func (eb *EventBuilder) CreatePresenceEvent(from, status string, timestamp int64
 func (eb *EventBuilder) CreateCallOfferEvent(from, callID string, timestamp int64) *QueueEvent {
 	return &QueueEvent{
 		EventID:   uuid.New().String(),
-		DeviceID:  eb.deviceID,
+		SenderJID: eb.SenderJID,
 		EventType: EventTypeCallOffer,
 		Timestamp: time.Now(),
 		Data: CallOfferEventData{
@@ -298,7 +302,7 @@ func (eb *EventBuilder) CreateCallOfferEvent(from, callID string, timestamp int6
 func (eb *EventBuilder) CreateMediaRetryErrorEvent(messageID, errorMsg string) *QueueEvent {
 	return &QueueEvent{
 		EventID:   uuid.New().String(),
-		DeviceID:  eb.deviceID,
+		SenderJID: eb.SenderJID,
 		EventType: EventTypeMediaRetryError,
 		Timestamp: time.Now(),
 		Data: MediaRetryErrorEventData{
@@ -309,15 +313,20 @@ func (eb *EventBuilder) CreateMediaRetryErrorEvent(messageID, errorMsg string) *
 }
 
 // CreatePairSuccessEvent creates a queue event for pair success events
-func (eb *EventBuilder) CreatePairSuccessEvent(deviceInfo, jid string) *QueueEvent {
+func (eb *EventBuilder) CreatePairSuccessEvent(senderJID, PhoneNumber string, deviceInfo interface{}) *QueueEvent {
+	// Put client cache
+	cache.SetClient(senderJID, eb.client)
+	cache.DeleteClient(eb.SenderJID)
+
 	return &QueueEvent{
 		EventID:   uuid.New().String(),
-		DeviceID:  eb.deviceID,
+		SenderJID: senderJID,
 		EventType: EventTypePairSuccess,
 		Timestamp: time.Now(),
 		Data: PairSuccessEventData{
-			DeviceInfo: deviceInfo,
-			JID:        jid,
+			AccountJID:  eb.SenderJID,
+			DeviceInfo:  deviceInfo,
+			PhoneNumber: PhoneNumber,
 		},
 	}
 }
@@ -359,6 +368,7 @@ func (eb *EventBuilder) CreateGenericMessageEvent(evt *events.Message) *QueueEve
 			Caption:  imgMsg.GetCaption(),
 			MimeType: imgMsg.GetMimetype(),
 			FileSize: imgMsg.GetFileLength(),
+			FileURL:  imgMsg.GetURL(),
 		}
 
 	case msg.GetAudioMessage() != nil:
@@ -377,6 +387,7 @@ func (eb *EventBuilder) CreateGenericMessageEvent(evt *events.Message) *QueueEve
 			Duration: audioMsg.GetSeconds(),
 			MimeType: audioMsg.GetMimetype(),
 			FileSize: audioMsg.GetFileLength(),
+			FileURL:  audioMsg.GetURL(),
 		}
 
 	case msg.GetVideoMessage() != nil:
@@ -396,6 +407,7 @@ func (eb *EventBuilder) CreateGenericMessageEvent(evt *events.Message) *QueueEve
 			Duration: videoMsg.GetSeconds(),
 			MimeType: videoMsg.GetMimetype(),
 			FileSize: videoMsg.GetFileLength(),
+			FileURL:  videoMsg.GetURL(),
 		}
 
 	case msg.GetDocumentMessage() != nil:
@@ -414,6 +426,7 @@ func (eb *EventBuilder) CreateGenericMessageEvent(evt *events.Message) *QueueEve
 			FileName: docMsg.GetFileName(),
 			MimeType: docMsg.GetMimetype(),
 			FileSize: docMsg.GetFileLength(),
+			FileURL:  docMsg.GetURL(),
 		}
 
 	case msg.GetLocationMessage() != nil:
@@ -503,7 +516,7 @@ func (eb *EventBuilder) CreateGenericMessageEvent(evt *events.Message) *QueueEve
 
 	return &QueueEvent{
 		EventID:   uuid.New().String(),
-		DeviceID:  eb.deviceID,
+		SenderJID: eb.SenderJID,
 		EventType: EventTypeMessage,
 		Timestamp: time.Now(),
 		Data:      messageData,

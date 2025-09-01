@@ -44,7 +44,9 @@ message ConnectDeviceRequest {
 }
 
 message EventResponse {
-  string qr = 1;
+  string type = 1;
+  string qr = 2;
+  string desc = 3;
 }
 
 
