@@ -50,10 +50,12 @@ func (s *service) ConnectDevice(ctx context.Context, container *sqlstore.Contain
 
 	client := whatsmeow.NewClient(device, clientLog)
 	AttachAllHandlers(jid.String(), s.publisher, s.logger, client, stream)
+	cache.SetClient(device.ID.String(), client)
 
 	if client.Store.ID == nil {
-		eventBuilder := model.NewEventBuilder(jid.String(), client)
+		eventBuilder := model.NewEventBuilder(jid.String())
 		qrChan, _ := client.GetQRChannel(context.Background())
+
 		go func() {
 			_ = client.Connect()
 		}()

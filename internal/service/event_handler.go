@@ -16,7 +16,7 @@ import (
 )
 
 func AttachAllHandlers(senderJid string, publisher messaging.AMQPPublisherInterface, logger provider.ILogger, client *whatsmeow.Client, stream proto.WaCoreGateway_StreamConnectDeviceServer) {
-	eventBuilder := model.NewEventBuilder(senderJid, client)
+	eventBuilder := model.NewEventBuilder(senderJid)
 	ctx := context.WithValue(context.Background(), constant.CtxReqIDKey, senderJid)
 
 	client.AddEventHandler(func(evt interface{}) {

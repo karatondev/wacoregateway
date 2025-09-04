@@ -1,0 +1,16 @@
+2025-09-03 20:14:58.687 - INFO - MAIN - Application started
+2025-09-03 20:15:00.014 - INFO - MAIN - gRPC server listening on :50051
+2025-09-03 20:15:00.804 - INFO - 6289513689096:49@s.whatsapp.net - Connected
+2025-09-03 20:15:01.876 - INFO - 6289685227426:16@s.whatsapp.net - Connected
+2025-09-03 20:15:06.401 - INFO - 6289685227426:16@s.whatsapp.net - New message from 6285217386368@s.whatsapp.net: 
+2025-09-03 20:15:06.965 - INFO - 6289685227426:16@s.whatsapp.net - New message from 6285217386368@s.whatsapp.net: 
+2025-09-03 20:15:06.966 - DEBUG - 6289685227426:16@s.whatsapp.net - Video with caption: ☺
+2025-09-03 20:15:07.419 - INFO - 6289685227426:16@s.whatsapp.net - New message from 6285217386368@s.whatsapp.net: 
+2025-09-03 20:17:19.690 - INFO - 6289513689096:49@s.whatsapp.net - Logged out
+2025-09-03 20:17:45.320 - INFO - MAIN - Receiving signal: interrupt
+2025-09-03 20:17:45.321 - INFO - MAIN - Successfully stop Application.
+2025-09-03 20:17:50.048 - INFO - MAIN - Application started
+2025-09-03 20:17:50.779 - INFO - MAIN - gRPC server listening on :50051
+2025-09-03 20:17:52.272 - INFO - 6289685227426:16@s.whatsapp.net - Connected
+2025-09-03 20:19:18.038 - INFO - MAIN - Receiving signal: interrupt
+2025-09-03 20:19:18.038 - INFO - MAIN - Successfully stop Application.

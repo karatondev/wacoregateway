@@ -2,24 +2,20 @@ package model
 
 import (
 	"time"
-	"wacoregateway/internal/cache"
 
 	"github.com/google/uuid"
-	"go.mau.fi/whatsmeow"
 	"go.mau.fi/whatsmeow/types/events"
 )
 
 // EventBuilder helps create QueueEvent instances for different event types
 type EventBuilder struct {
 	SenderJID string
-	client    *whatsmeow.Client
 }
 
 // NewEventBuilder creates a new EventBuilder instance
-func NewEventBuilder(SenderJID string, client *whatsmeow.Client) *EventBuilder {
+func NewEventBuilder(SenderJID string) *EventBuilder {
 	return &EventBuilder{
 		SenderJID: SenderJID,
-		client:    client,
 	}
 }
 
@@ -315,9 +311,6 @@ func (eb *EventBuilder) CreateMediaRetryErrorEvent(messageID, errorMsg string) *
 // CreatePairSuccessEvent creates a queue event for pair success events
 func (eb *EventBuilder) CreatePairSuccessEvent(senderJID, PhoneNumber string, deviceInfo interface{}) *QueueEvent {
 	// Put client cache
-	cache.SetClient(senderJID, eb.client)
-	cache.DeleteClient(eb.SenderJID)
-
 	return &QueueEvent{
 		EventID:   uuid.New().String(),
 		SenderJID: senderJID,
