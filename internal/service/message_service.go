@@ -9,7 +9,10 @@ import (
 	"strings"
 
 	"wacoregateway/internal/cache"
+	"wacoregateway/internal/provider"
+	"wacoregateway/model"
 	proto "wacoregateway/model/pb"
+	"wacoregateway/util"
 
 	"go.mau.fi/whatsmeow"
 
@@ -174,6 +177,16 @@ func (s *service) ProcessSendMessage(ctx context.Context, req *proto.MessagePayl
 
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to send message: %v", err)
+	}
+
+	// Publish outbound message event to queue
+	eventBuilder := model.NewEventBuilder(req.SenderJid)
+	queueEvent := eventBuilder.CreateOutboundMessageEvent(resp.ID, req.Type, req.To, msg)
+	queueName := util.Configuration.Queues.MessagesEventQueue
+
+	err = s.publisher.Publish(ctx, queueName, queueEvent)
+	if err != nil {
+		s.logger.Errorfctx(provider.AppLog, ctx, false, "Failed to publish outbound message event: %v", err)
 	}
 
 	return &proto.MessageResponse{

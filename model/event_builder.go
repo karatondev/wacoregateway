@@ -77,7 +77,7 @@ func (eb *EventBuilder) CreateTextMessageEvent(sender, content string) *QueueEve
 	return &QueueEvent{
 		EventID:   uuid.New().String(),
 		SenderJID: eb.SenderJID,
-		EventType: EventTypeMessage,
+		EventType: EventTypeInboundMessage,
 		Timestamp: time.Now(),
 		Data: MessageEventData{
 			Sender:      sender,
@@ -93,7 +93,7 @@ func (eb *EventBuilder) CreateImageMessageEvent(sender, caption, mimeType string
 	return &QueueEvent{
 		EventID:   uuid.New().String(),
 		SenderJID: eb.SenderJID,
-		EventType: EventTypeMessage,
+		EventType: EventTypeInboundMessage,
 		Timestamp: time.Now(),
 		Data: ImageMessageData{
 			MessageEventData: MessageEventData{
@@ -113,7 +113,7 @@ func (eb *EventBuilder) CreateAudioMessageEvent(sender string, duration uint32, 
 	return &QueueEvent{
 		EventID:   uuid.New().String(),
 		SenderJID: eb.SenderJID,
-		EventType: EventTypeMessage,
+		EventType: EventTypeInboundMessage,
 		Timestamp: time.Now(),
 		Data: AudioMessageData{
 			MessageEventData: MessageEventData{
@@ -133,7 +133,7 @@ func (eb *EventBuilder) CreateVideoMessageEvent(sender, caption, mimeType string
 	return &QueueEvent{
 		EventID:   uuid.New().String(),
 		SenderJID: eb.SenderJID,
-		EventType: EventTypeMessage,
+		EventType: EventTypeInboundMessage,
 		Timestamp: time.Now(),
 		Data: VideoMessageData{
 			MessageEventData: MessageEventData{
@@ -154,7 +154,7 @@ func (eb *EventBuilder) CreateDocumentMessageEvent(sender, fileName, mimeType st
 	return &QueueEvent{
 		EventID:   uuid.New().String(),
 		SenderJID: eb.SenderJID,
-		EventType: EventTypeMessage,
+		EventType: EventTypeInboundMessage,
 		Timestamp: time.Now(),
 		Data: DocumentMessageData{
 			MessageEventData: MessageEventData{
@@ -174,7 +174,7 @@ func (eb *EventBuilder) CreateLocationMessageEvent(sender string, latitude, long
 	return &QueueEvent{
 		EventID:   uuid.New().String(),
 		SenderJID: eb.SenderJID,
-		EventType: EventTypeMessage,
+		EventType: EventTypeInboundMessage,
 		Timestamp: time.Now(),
 		Data: LocationMessageData{
 			MessageEventData: MessageEventData{
@@ -195,7 +195,7 @@ func (eb *EventBuilder) CreateReactionMessageEvent(sender, text, targetKey, targ
 	return &QueueEvent{
 		EventID:   uuid.New().String(),
 		SenderJID: eb.SenderJID,
-		EventType: EventTypeMessage,
+		EventType: EventTypeInboundMessage,
 		Timestamp: time.Now(),
 		Data: ReactionMessageData{
 			MessageEventData: MessageEventData{
@@ -215,7 +215,7 @@ func (eb *EventBuilder) CreateButtonResponseMessageEvent(sender, selectedButtonI
 	return &QueueEvent{
 		EventID:   uuid.New().String(),
 		SenderJID: eb.SenderJID,
-		EventType: EventTypeMessage,
+		EventType: EventTypeInboundMessage,
 		Timestamp: time.Now(),
 		Data: ButtonResponseMessageData{
 			MessageEventData: MessageEventData{
@@ -234,7 +234,7 @@ func (eb *EventBuilder) CreateListResponseMessageEvent(sender, title, descriptio
 	return &QueueEvent{
 		EventID:   uuid.New().String(),
 		SenderJID: eb.SenderJID,
-		EventType: EventTypeMessage,
+		EventType: EventTypeInboundMessage,
 		Timestamp: time.Now(),
 		Data: ListResponseMessageData{
 			MessageEventData: MessageEventData{
@@ -510,8 +510,24 @@ func (eb *EventBuilder) CreateGenericMessageEvent(evt *events.Message) *QueueEve
 	return &QueueEvent{
 		EventID:   uuid.New().String(),
 		SenderJID: eb.SenderJID,
-		EventType: EventTypeMessage,
+		EventType: EventTypeInboundMessage,
 		Timestamp: time.Now(),
 		Data:      messageData,
+	}
+}
+
+// CreateOutboundMessageEvent creates a queue event for outbound message events
+func (eb *EventBuilder) CreateOutboundMessageEvent(messageID, messageType, to string, message interface{}) *QueueEvent {
+	return &QueueEvent{
+		EventID:   uuid.New().String(),
+		SenderJID: eb.SenderJID,
+		EventType: EventTypeOutboundMessage,
+		Timestamp: time.Now(),
+		Data: OutboundMessageData{
+			MessageID:   messageID,
+			MessageType: messageType,
+			To:          to,
+			Message:     message,
+		},
 	}
 }
