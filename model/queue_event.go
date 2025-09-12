@@ -151,6 +151,7 @@ type ListResponseMessageData struct {
 type ReceiptEventData struct {
 	MessageIDs []string `json:"message_ids"`
 	Sender     string   `json:"sender"`
+	Type       string   `json:"type"` // delivered, read, played, etc.
 	Timestamp  int64    `json:"timestamp"`
 }
 

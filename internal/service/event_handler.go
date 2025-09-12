@@ -101,8 +101,8 @@ func HandleMessageEvents(senderJid string, publisher messaging.AMQPPublisherInte
 		logger.Infofctx(provider.AppLog, ctx, "Receipt for message ID %v from %s", v.MessageIDs, v.Sender.String())
 
 		// Create and publish receipt event
-		queueEvent = eventBuilder.CreateReceiptEvent(v.MessageIDs, v.Sender.String(), v.Timestamp.Unix())
-
+		queueEvent = eventBuilder.CreateReceiptEvent(v.MessageIDs, v.Sender.String(), string(v.Type), v.Timestamp.Unix())
+		logger.Debugfctx(provider.AppLog, ctx, "Queue: %v", queueEvent)
 	case *events.Message:
 		sender := v.Info.Sender.String()
 		content := v.Message.GetConversation()

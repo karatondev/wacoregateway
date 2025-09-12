@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"go.mau.fi/whatsmeow/types"
 	"go.mau.fi/whatsmeow/types/events"
 )
 
@@ -250,7 +251,12 @@ func (eb *EventBuilder) CreateListResponseMessageEvent(sender, title, descriptio
 }
 
 // CreateReceiptEvent creates a queue event for receipt events
-func (eb *EventBuilder) CreateReceiptEvent(messageIDs []string, sender string, timestamp int64) *QueueEvent {
+func (eb *EventBuilder) CreateReceiptEvent(messageIDs []string, sender string, receiptType string, timestamp int64) *QueueEvent {
+
+	if receiptType == string(types.ReceiptTypeDelivered) {
+		receiptType = "delivered"
+	}
+
 	return &QueueEvent{
 		EventID:   uuid.New().String(),
 		SenderJID: eb.SenderJID,
@@ -259,6 +265,7 @@ func (eb *EventBuilder) CreateReceiptEvent(messageIDs []string, sender string, t
 		Data: ReceiptEventData{
 			MessageIDs: messageIDs,
 			Sender:     sender,
+			Type:       receiptType,
 			Timestamp:  timestamp,
 		},
 	}

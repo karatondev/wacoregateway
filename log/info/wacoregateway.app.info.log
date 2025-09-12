@@ -1,16 +1,78 @@
-2025-09-03 20:14:58.687 - INFO - MAIN - Application started
-2025-09-03 20:15:00.014 - INFO - MAIN - gRPC server listening on :50051
-2025-09-03 20:15:00.804 - INFO - 6289513689096:49@s.whatsapp.net - Connected
-2025-09-03 20:15:01.876 - INFO - 6289685227426:16@s.whatsapp.net - Connected
-2025-09-03 20:15:06.401 - INFO - 6289685227426:16@s.whatsapp.net - New message from 6285217386368@s.whatsapp.net: 
-2025-09-03 20:15:06.965 - INFO - 6289685227426:16@s.whatsapp.net - New message from 6285217386368@s.whatsapp.net: 
-2025-09-03 20:15:06.966 - DEBUG - 6289685227426:16@s.whatsapp.net - Video with caption: ☺
-2025-09-03 20:15:07.419 - INFO - 6289685227426:16@s.whatsapp.net - New message from 6285217386368@s.whatsapp.net: 
-2025-09-03 20:17:19.690 - INFO - 6289513689096:49@s.whatsapp.net - Logged out
-2025-09-03 20:17:45.320 - INFO - MAIN - Receiving signal: interrupt
-2025-09-03 20:17:45.321 - INFO - MAIN - Successfully stop Application.
-2025-09-03 20:17:50.048 - INFO - MAIN - Application started
-2025-09-03 20:17:50.779 - INFO - MAIN - gRPC server listening on :50051
-2025-09-03 20:17:52.272 - INFO - 6289685227426:16@s.whatsapp.net - Connected
-2025-09-03 20:19:18.038 - INFO - MAIN - Receiving signal: interrupt
-2025-09-03 20:19:18.038 - INFO - MAIN - Successfully stop Application.
+2025-09-12 19:45:21.607 - INFO - MAIN - Application started
+2025-09-12 19:45:23.201 - INFO - MAIN - gRPC server listening on :50051
+2025-09-12 19:45:23.989 - INFO - 6289685227426:16@s.whatsapp.net - Connected
+2025-09-12 19:45:25.124 - INFO - 6289513689096:54@s.whatsapp.net - Connected
+2025-09-12 19:51:58.192 - INFO - 6289513689096:54@s.whatsapp.net - Receipt for message ID [3EB0AB70E7F6F211707071] from 6282335685138:35@s.whatsapp.net
+2025-09-12 19:51:59.190 - INFO - 6289513689096:54@s.whatsapp.net - Receipt for message ID [3EB0AB70E7F6F211707071] from 6282335685138@s.whatsapp.net
+2025-09-12 19:52:27.345 - INFO - 6289513689096:54@s.whatsapp.net - Receipt for message ID [3EB0AB70E7F6F211707071] from 6282335685138:35@s.whatsapp.net
+2025-09-12 19:54:19.778 - INFO - 6289685227426:16@s.whatsapp.net - New message from 6289513689096:54@s.whatsapp.net: ini pesan dengan API
+2025-09-12 19:54:19.778 - DEBUG - 6289685227426:16@s.whatsapp.net - Text: ini pesan dengan API
+2025-09-12 19:54:20.115 - INFO - 6289513689096:54@s.whatsapp.net - Receipt for message ID [3EB0940221F93C61027CB3] from 6289685227426:16@s.whatsapp.net
+2025-09-12 19:54:36.475 - INFO - 6289685227426:16@s.whatsapp.net - New message from 6289513689096:54@s.whatsapp.net: ini pesan dengan API
+2025-09-12 19:54:36.477 - DEBUG - 6289685227426:16@s.whatsapp.net - Text: ini pesan dengan API
+2025-09-12 19:54:36.866 - INFO - 6289513689096:54@s.whatsapp.net - Receipt for message ID [3EB0F1B73837DC0411EBF7] from 6289685227426:16@s.whatsapp.net
+2025-09-12 19:55:53.685 - INFO - 6289513689096:54@s.whatsapp.net - Receipt for message ID [3EB0940221F93C61027CB3] from 6289685227426@s.whatsapp.net
+2025-09-12 19:55:53.690 - INFO - 6289513689096:54@s.whatsapp.net - Receipt for message ID [3EB0F1B73837DC0411EBF7] from 6289685227426@s.whatsapp.net
+2025-09-12 19:56:49.213 - INFO - 6289685227426:16@s.whatsapp.net - Receipt for message ID [3EB0F1B73837DC0411EBF7 3EB0940221F93C61027CB3] from 6289685227426@s.whatsapp.net
+2025-09-12 19:56:49.273 - INFO - 6289513689096:54@s.whatsapp.net - Receipt for message ID [3EB0F1B73837DC0411EBF7 3EB0940221F93C61027CB3] from 6289685227426@s.whatsapp.net
+2025-09-12 19:57:26.545 - INFO - MAIN - Receiving signal: interrupt
+2025-09-12 19:57:26.545 - INFO - MAIN - Successfully stop Application.
+2025-09-12 20:42:09.656 - INFO - MAIN - Application started
+2025-09-12 20:42:11.116 - INFO - MAIN - gRPC server listening on :50051
+2025-09-12 20:42:11.906 - INFO - 6289685227426:16@s.whatsapp.net - Connected
+2025-09-12 20:42:12.810 - INFO - 6289513689096:54@s.whatsapp.net - Connected
+2025-09-12 20:42:16.146 - INFO - 6289685227426:16@s.whatsapp.net - New message from 6287744958318@s.whatsapp.net: 
+2025-09-12 20:42:16.725 - INFO - 6289685227426:16@s.whatsapp.net - New message from 6287744958318@s.whatsapp.net: 
+2025-09-12 20:42:16.725 - DEBUG - 6289685227426:16@s.whatsapp.net - Image with caption: 
+2025-09-12 20:43:06.985 - INFO - MAIN - Receiving signal: interrupt
+2025-09-12 20:43:06.985 - INFO - MAIN - Successfully stop Application.
+2025-09-12 20:43:12.014 - INFO - MAIN - Application started
+2025-09-12 20:43:13.845 - INFO - MAIN - gRPC server listening on :50051
+2025-09-12 20:43:14.949 - INFO - 6289685227426:16@s.whatsapp.net - Connected
+2025-09-12 20:43:15.930 - INFO - 6289513689096:54@s.whatsapp.net - Connected
+2025-09-12 20:44:12.673 - INFO - 6289685227426:16@s.whatsapp.net - New message from 6289513689096:54@s.whatsapp.net: ini pesan dengan API
+2025-09-12 20:44:12.674 - DEBUG - 6289685227426:16@s.whatsapp.net - Text: ini pesan dengan API
+2025-09-12 20:44:13.019 - INFO - 6289513689096:54@s.whatsapp.net - Receipt for message ID [3EB0BC60695A4F9B1E75E2] from 6289685227426:16@s.whatsapp.net
+2025-09-12 20:44:13.019 - DEBUG - 6289513689096:54@s.whatsapp.net - Queue: &{51f647e0-62f1-4505-955f-c399b09b3958 6289513689096:54@s.whatsapp.net receipt 2025-09-12 20:44:13.0192778 +0700 +07 m=+61.431462101 {[3EB0BC60695A4F9B1E75E2] 6289685227426:16@s.whatsapp.net types.ReceiptType("inactive") 1757684801}}
+2025-09-12 20:45:24.431 - INFO - MAIN - Receiving signal: interrupt
+2025-09-12 20:45:24.431 - INFO - MAIN - Successfully stop Application.
+2025-09-12 20:45:29.565 - INFO - MAIN - Application started
+2025-09-12 20:45:31.310 - INFO - MAIN - gRPC server listening on :50051
+2025-09-12 20:45:32.127 - INFO - 6289685227426:16@s.whatsapp.net - Connected
+2025-09-12 20:45:33.129 - INFO - 6289513689096:54@s.whatsapp.net - Connected
+2025-09-12 20:45:43.547 - INFO - 6289685227426:16@s.whatsapp.net - New message from 6289513689096:54@s.whatsapp.net: ini pesan dengan API
+2025-09-12 20:45:43.547 - DEBUG - 6289685227426:16@s.whatsapp.net - Text: ini pesan dengan API
+2025-09-12 20:45:43.812 - INFO - 6289513689096:54@s.whatsapp.net - Receipt for message ID [3EB0C214B250601C984DAC] from 6289685227426:16@s.whatsapp.net
+2025-09-12 20:45:43.812 - DEBUG - 6289513689096:54@s.whatsapp.net - Queue: &{926c99a1-c0c4-4c61-9d5e-2ac83079eda7 6289513689096:54@s.whatsapp.net receipt 2025-09-12 20:45:43.8128715 +0700 +07 m=+14.680654401 {[3EB0C214B250601C984DAC] 6289685227426:16@s.whatsapp.net inactive 1757684892}}
+2025-09-12 20:46:52.684 - INFO - 6289513689096:54@s.whatsapp.net - Receipt for message ID [3EB0BC60695A4F9B1E75E2] from 6289685227426@s.whatsapp.net
+2025-09-12 20:46:52.685 - DEBUG - 6289513689096:54@s.whatsapp.net - Queue: &{7b637945-a16c-4d45-9140-795154350373 6289513689096:54@s.whatsapp.net receipt 2025-09-12 20:46:52.6853426 +0700 +07 m=+83.553125501 {[3EB0BC60695A4F9B1E75E2] 6289685227426@s.whatsapp.net  1757684961}}
+2025-09-12 20:46:52.723 - INFO - 6289513689096:54@s.whatsapp.net - Receipt for message ID [3EB0C214B250601C984DAC] from 6289685227426@s.whatsapp.net
+2025-09-12 20:46:52.724 - DEBUG - 6289513689096:54@s.whatsapp.net - Queue: &{b032a7b7-fecf-4e82-ac96-a9085328318a 6289513689096:54@s.whatsapp.net receipt 2025-09-12 20:46:52.724257 +0700 +07 m=+83.592039901 {[3EB0C214B250601C984DAC] 6289685227426@s.whatsapp.net  1757684961}}
+2025-09-12 20:47:25.126 - INFO - 6289685227426:16@s.whatsapp.net - Receipt for message ID [3EB0C214B250601C984DAC 3EB0BC60695A4F9B1E75E2] from 6289685227426@s.whatsapp.net
+2025-09-12 20:47:25.126 - DEBUG - 6289685227426:16@s.whatsapp.net - Queue: &{463975c3-746f-474f-8f40-d3acf5e5d360 6289685227426:16@s.whatsapp.net receipt 2025-09-12 20:47:25.1264348 +0700 +07 m=+115.994217701 {[3EB0C214B250601C984DAC 3EB0BC60695A4F9B1E75E2] 6289685227426@s.whatsapp.net read 1757684993}}
+2025-09-12 20:47:25.151 - INFO - 6289513689096:54@s.whatsapp.net - Receipt for message ID [3EB0C214B250601C984DAC 3EB0BC60695A4F9B1E75E2] from 6289685227426@s.whatsapp.net
+2025-09-12 20:47:25.151 - DEBUG - 6289513689096:54@s.whatsapp.net - Queue: &{2dda72ba-b9a3-426c-8d58-c88200dcfbda 6289513689096:54@s.whatsapp.net receipt 2025-09-12 20:47:25.1519852 +0700 +07 m=+116.019768101 {[3EB0C214B250601C984DAC 3EB0BC60695A4F9B1E75E2] 6289685227426@s.whatsapp.net read 1757684993}}
+2025-09-12 20:49:14.123 - INFO - 6289685227426:16@s.whatsapp.net - New message from 6289513689096:54@s.whatsapp.net: ini pesan dengan API
+2025-09-12 20:49:14.125 - DEBUG - 6289685227426:16@s.whatsapp.net - Text: ini pesan dengan API
+2025-09-12 20:49:14.390 - INFO - 6289513689096:54@s.whatsapp.net - Receipt for message ID [3EB08AD3D9EA51E137F590] from 6289685227426:16@s.whatsapp.net
+2025-09-12 20:49:14.390 - DEBUG - 6289513689096:54@s.whatsapp.net - Queue: &{5b0f905b-ece8-4563-a56b-e078ab3473f9 6289513689096:54@s.whatsapp.net receipt 2025-09-12 20:49:14.3901389 +0700 +07 m=+225.257921801 {[3EB08AD3D9EA51E137F590] 6289685227426:16@s.whatsapp.net inactive 1757685103}}
+2025-09-12 20:50:45.581 - INFO - 6289513689096:54@s.whatsapp.net - Receipt for message ID [3EB08AD3D9EA51E137F590] from 6289685227426@s.whatsapp.net
+2025-09-12 20:50:45.583 - DEBUG - 6289513689096:54@s.whatsapp.net - Queue: &{8579dd2d-a018-4bce-9e88-6a02a15ab4f1 6289513689096:54@s.whatsapp.net receipt 2025-09-12 20:50:45.5830625 +0700 +07 m=+316.450845401 {[3EB08AD3D9EA51E137F590] 6289685227426@s.whatsapp.net  1757685194}}
+2025-09-12 20:51:43.987 - INFO - 6289685227426:16@s.whatsapp.net - Receipt for message ID [3EB08AD3D9EA51E137F590] from 6289685227426@s.whatsapp.net
+2025-09-12 20:51:43.988 - DEBUG - 6289685227426:16@s.whatsapp.net - Queue: &{cc255275-0e80-43aa-85ae-cd8b353d6d03 6289685227426:16@s.whatsapp.net receipt 2025-09-12 20:51:43.988716 +0700 +07 m=+374.856498901 {[3EB08AD3D9EA51E137F590] 6289685227426@s.whatsapp.net read 1757685252}}
+2025-09-12 20:51:44.018 - INFO - 6289513689096:54@s.whatsapp.net - Receipt for message ID [3EB08AD3D9EA51E137F590] from 6289685227426@s.whatsapp.net
+2025-09-12 20:51:44.020 - DEBUG - 6289513689096:54@s.whatsapp.net - Queue: &{6df9f9c4-7617-4872-9d6a-35cf7bb1c5a4 6289513689096:54@s.whatsapp.net receipt 2025-09-12 20:51:44.0204498 +0700 +07 m=+374.888232701 {[3EB08AD3D9EA51E137F590] 6289685227426@s.whatsapp.net read 1757685252}}
+2025-09-12 20:56:50.639 - INFO - MAIN - Receiving signal: interrupt
+2025-09-12 20:56:50.639 - INFO - MAIN - Successfully stop Application.
+2025-09-12 20:56:56.178 - INFO - MAIN - Application started
+2025-09-12 20:56:57.423 - INFO - MAIN - gRPC server listening on :50051
+2025-09-12 20:56:58.246 - INFO - 6289685227426:16@s.whatsapp.net - Connected
+2025-09-12 20:56:59.244 - INFO - 6289513689096:54@s.whatsapp.net - Connected
+2025-09-12 20:57:09.138 - INFO - 6289685227426:16@s.whatsapp.net - New message from 6289513689096:54@s.whatsapp.net: ini pesan dengan API
+2025-09-12 20:57:09.138 - DEBUG - 6289685227426:16@s.whatsapp.net - Text: ini pesan dengan API
+2025-09-12 20:57:09.407 - INFO - 6289513689096:54@s.whatsapp.net - Receipt for message ID [3EB07F8CD3B7AF39E4FF8C] from 6289685227426:16@s.whatsapp.net
+2025-09-12 20:57:09.408 - DEBUG - 6289513689096:54@s.whatsapp.net - Queue: &{8324e6cc-d109-4a7b-85a8-da5e66f8396d 6289513689096:54@s.whatsapp.net receipt 2025-09-12 20:57:09.4082776 +0700 +07 m=+13.802333101 {[3EB07F8CD3B7AF39E4FF8C] 6289685227426:16@s.whatsapp.net inactive 1757685578}}
+2025-09-12 20:57:26.587 - INFO - 6289513689096:54@s.whatsapp.net - Receipt for message ID [3EB07F8CD3B7AF39E4FF8C] from 6289685227426@s.whatsapp.net
+2025-09-12 20:57:26.587 - DEBUG - 6289513689096:54@s.whatsapp.net - Queue: &{ee2cd976-c62c-4e15-aeaf-19d7ef8e0787 6289513689096:54@s.whatsapp.net receipt 2025-09-12 20:57:26.5874362 +0700 +07 m=+30.981491701 {[3EB07F8CD3B7AF39E4FF8C] 6289685227426@s.whatsapp.net delivered 1757685595}}
+2025-09-12 20:57:49.402 - INFO - MAIN - Receiving signal: interrupt
+2025-09-12 20:57:49.402 - INFO - MAIN - Successfully stop Application.
