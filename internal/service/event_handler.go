@@ -93,7 +93,6 @@ func HandleConnectionEvents(senderJid string, publisher messaging.AMQPPublisherI
 }
 
 func HandleMessageEvents(senderJid string, publisher messaging.AMQPPublisherInterface, logger provider.ILogger, eventBuilder *model.EventBuilder, ctx context.Context, evt interface{}) {
-	queueName := util.Configuration.Queues.MessagesEventQueue
 	queueEvent := &model.QueueEvent{}
 
 	switch v := evt.(type) {
@@ -103,6 +102,14 @@ func HandleMessageEvents(senderJid string, publisher messaging.AMQPPublisherInte
 		// Create and publish receipt event
 		queueEvent = eventBuilder.CreateReceiptEvent(v.MessageIDs, v.Sender.String(), string(v.Type), v.Timestamp.Unix())
 		logger.Debugfctx(provider.AppLog, ctx, "Queue: %v", queueEvent)
+
+		queueName := util.Configuration.Queues.ReceiptsQueue
+		err := publisher.Publish(ctx, queueName, queueEvent, func(options *messaging.AMQPPublisherOptions) {})
+		if err != nil {
+			logger.Errorfctx(provider.AppLog, ctx, false, "Failed to publish message event: %v", err)
+		}
+		return
+
 	case *events.Message:
 		sender := v.Info.Sender.String()
 		content := v.Message.GetConversation()
@@ -143,15 +150,17 @@ func HandleMessageEvents(senderJid string, publisher messaging.AMQPPublisherInte
 			logger.Debugfctx(provider.AppLog, ctx, "Reacted with: %s", msg.GetReactionMessage().GetText())
 		}
 
+		queueName := util.Configuration.Queues.MessagesEventQueue
+		err := publisher.Publish(ctx, queueName, queueEvent, func(options *messaging.AMQPPublisherOptions) {})
+		if err != nil {
+			logger.Errorfctx(provider.AppLog, ctx, false, "Failed to publish message event: %v", err)
+		}
+
+		return
+
 	default:
 		return
 	}
-
-	err := publisher.Publish(ctx, queueName, queueEvent, func(options *messaging.AMQPPublisherOptions) {})
-	if err != nil {
-		logger.Errorfctx(provider.AppLog, ctx, false, "Failed to publish message event: %v", err)
-	}
-
 }
 
 func HandleAnyEvents(senderJid string, publisher messaging.AMQPPublisherInterface, logger provider.ILogger, eventBuilder *model.EventBuilder, ctx context.Context, evt interface{}) {
